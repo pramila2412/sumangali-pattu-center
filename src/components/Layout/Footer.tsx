@@ -21,9 +21,6 @@ const Footer = () => {
               <a href={GlobalData.socialLinks.facebook} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--secondary)] hover:text-[var(--primary)] transition-all">
                 <i className="bx bxl-facebook text-xl"></i>
               </a>
-              <a href={GlobalData.socialLinks.twitter} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--secondary)] hover:text-[var(--primary)] transition-all">
-                <i className="bx bxl-twitter text-xl"></i>
-              </a>
               <a href={GlobalData.socialLinks.instagram} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--secondary)] hover:text-[var(--primary)] transition-all">
                 <i className="bx bxl-instagram text-xl"></i>
               </a>
@@ -80,11 +77,11 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-white/10 pt-6 text-center text-sm flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-white/10 pt-6 text-center text-sm flex flex-col md:flex-row justify-between items-center gap-4">
           <p>{GlobalData.footer.copyright}</p>
-          <div className="mt-4 md:mt-0 space-x-4">
-            <a href="#" className="hover:text-[var(--secondary)] transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-[var(--secondary)] transition-colors">Terms & Conditions</a>
+          <div className="flex space-x-6 text-white/60">
+            <Link to="/privacy-policy" className="hover:text-[var(--secondary)] transition-colors">Privacy Policy</Link>
+            <Link to="/terms-conditions" className="hover:text-[var(--secondary)] transition-colors">Terms & Conditions</Link>
           </div>
         </div>
       </div>

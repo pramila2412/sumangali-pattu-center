@@ -22,7 +22,6 @@ const Header = () => {
           </div>
           <div className="flex space-x-4">
             <a href={GlobalData.socialLinks.facebook} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-facebook text-lg"></i></a>
-            <a href={GlobalData.socialLinks.twitter} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-twitter text-lg"></i></a>
             <a href={GlobalData.socialLinks.instagram} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-instagram text-lg"></i></a>
             <a href={GlobalData.socialLinks.linkedin} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-linkedin-square text-lg"></i></a>
           </div>

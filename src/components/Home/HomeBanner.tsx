@@ -51,7 +51,7 @@ const HomeBanner = () => {
           </div>
 
           {/* Main Title */}
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight whitespace-pre-line text-white">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight whitespace-pre-line text-white">
             {HomeBannerData[currentSlide].title}
           </h1>
 
