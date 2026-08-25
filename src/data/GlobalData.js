@@ -30,6 +30,6 @@ export const GlobalData = {
   ],
   footer: {
     about: "Sumangali Pattu Center is your trusted buyer for old silk and pattu sarees. We offer instant cash and free doorstep pickup.",
-    copyright: "© 2024 Sumangali Pattu Center. All Rights Reserved."
+    copyright: "© 2026 Sumangali Pattu Center. All Rights Reserved."
   }
 };

@@ -6,6 +6,7 @@ import ContactScreen from './pages/ContactScreen';
 import GalleryScreen from './pages/GalleryScreen';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
+import FloatingIcons from './components/Layout/FloatingIcons';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/gallery" element={<GalleryScreen />} />
       </Routes>
       <Footer />
+      <FloatingIcons />
     </Router>
   );
 }
