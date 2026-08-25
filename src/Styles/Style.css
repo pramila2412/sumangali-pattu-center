@@ -1,0 +1,84 @@
+:root {
+  /* Brand Colors */
+  --primary: #6A0F1F;
+  --primary-light: #6A0F1F;
+  --primary-dark: #6A0F1F;
+
+  /* Secondary / Gold */
+  --secondary: #D9AD5B;
+  --secondary-light: #F3D794;
+  --secondary-dark: #A37E39;
+
+  /* Text */
+  --heading: #2E1938;
+  --paragraph: #4a4a4a;
+  --muted: #757575;
+
+  /* Buttons */
+  --button: #6A0F1F;
+  --button-hover: #6A0F1F;
+  --button-text: #FFFFFF;
+
+  /* Gold Buttons */
+  --gold-button: #D9AD5B;
+  --gold-button-hover: #A37E39;
+  --gold-button-text: #331A04;
+
+  /* Background */
+  --background: #FCF9F4;
+  --background-maroon: #f9f1f3;
+  --background-gold: #FFF9E8;
+
+  /* Cards */
+  --card: #FFFFFF;
+  --card-hover: #fcf6f7;
+
+  /* Border */
+  --border: #e6caced2;
+  --gold-border: #E5D3A3;
+
+  /* Common */
+  --white: #FFFFFF;
+  --black: #1F1724;
+  --success: #2E7D32;
+  --error: #C62828;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--background);
+  color: var(--paragraph);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Playfair Display", serif;
+}
+
+button {
+  background: var(--button);
+  color: var(--white);
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+.home-banner__overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
