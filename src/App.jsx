@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import HomeScreen from './pages/HomeScreen';
 import AboutScreen from './pages/AboutScreen';
 import ServicesScreen from './pages/ServicesScreen';
@@ -9,11 +9,16 @@ import TermsConditionsScreen from './pages/TermsConditionsScreen';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import FloatingIcons from './components/Layout/FloatingIcons';
+import LoginScreen from './pages/Admin/LoginScreen';
+import { ToastProvider } from './components/Toast/ToastProvider';
 
-function App() {
+function AppContent() {
+  const { pathname } = useLocation();
+  const isAdminRoute = pathname.startsWith('/admin');
+
   return (
-    <Router>
-      <Header />
+    <>
+      {!isAdminRoute && <Header />}
       <Routes>
         <Route path="/" element={<HomeScreen />} />
         <Route path="/about" element={<AboutScreen />} />
@@ -22,9 +27,19 @@ function App() {
         <Route path="/gallery" element={<GalleryScreen />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyScreen />} />
         <Route path="/terms-conditions" element={<TermsConditionsScreen />} />
+        <Route path="/admin/login" element={<LoginScreen />} />
       </Routes>
-      <Footer />
-      <FloatingIcons />
+      {!isAdminRoute && <><Footer /><FloatingIcons /></>}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </Router>
   );
 }
