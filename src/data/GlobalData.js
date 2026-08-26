@@ -3,8 +3,8 @@ export const GlobalData = {
   logo: "logo.png", // Ensure this matches the filename in src/assets/logo/
   contactInfo: {
     phone: "9944118349",
-    email: "Akajith2928@gmail.com",
-    address: "6/224 Raji Nagar 3rd Street Nanmangalam Chennai -129"
+    email: "Sumangalipattucenter@gmail.com",
+    address: "No.13 4th Main Road Nanganallur Chennai-6000061 "
   },
   socialLinks: {
     facebook: "https://www.facebook.com/",

@@ -12,7 +12,7 @@ const Footer = () => {
           {/* About Widget */}
           <div>
             <div className="mb-6">
-              <img src={Logo} alt="Sumangali Pattu Center Logo" className="h-24 w-auto object-contain" />
+              <img src={Logo} alt="Sumangali Pattu Center Logo" className="h-32 w-auto object-contain" />
             </div>
             <p className="mb-6 leading-relaxed">
               {GlobalData.footer.about}

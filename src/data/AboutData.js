@@ -3,7 +3,7 @@ export const AboutData = {
     title: "About Us",
     breadcrumb: "About Us"
   },
-  marquee: "Address: 6/224 Raji Nagar 3rd Street Nanmangalam Chennai -129",
+  marquee: "Address: No.13 4th Main Road Nanganallur Chennai-6000061 ",
   stats: {
     title: "Our Business Success",
     subtitle: "Our Growth Story in the World of Old Silk Sarees",

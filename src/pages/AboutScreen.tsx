@@ -53,7 +53,7 @@ const AboutScreen = () => {
       <div className="bg-[var(--primary)] text-white py-4 border-y-4 border-[var(--secondary)] font-bold text-lg md:text-xl overflow-hidden whitespace-nowrap">
         <marquee behavior="scroll" direction="left" scrollamount="8">
           <strong className="text-[var(--secondary)] mr-2">Address:</strong>  
-          6/224 Raji Nagar 3rd Street Nanmangalam Chennai -129
+          No.13 4th Main Road Nanganallur Chennai-6000061 
         </marquee>
       </div>
 

@@ -23,7 +23,7 @@ const Header = () => {
           <div className="flex space-x-4">
             <a href={GlobalData.socialLinks.facebook} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-facebook text-lg"></i></a>
             <a href={GlobalData.socialLinks.instagram} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-instagram text-lg"></i></a>
-            <a href={GlobalData.socialLinks.linkedin} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-linkedin-square text-lg"></i></a>
+          
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@ const Header = () => {
           
           {/* Logo */}
           <Link to="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
-            <img src={Logo} alt="Sumangali Pattu Center Logo" className="h-14 md:h-20 w-auto object-contain" />
+            <img src={Logo} alt="Sumangali Pattu Center Logo" className="h-14 md:h-32 w-auto object-contain" />
           </Link>
 
           {/* Desktop Nav */}
