@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import vid1 from '../../assets/videos/vid1.mp4';
-import vid2 from '../../assets/videos/vid2.mp4';
-import vid3 from '../../assets/videos/vid3.mp4';
+
 import { HomeBannerData } from '../../data/HomeData';
 
 const HomeBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const vids = [vid1, vid2, vid3];
-
   // Auto-slide functionality
   useEffect(() => {
     const timer = setInterval(() => {
@@ -17,22 +13,19 @@ const HomeBanner = () => {
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-black">
-      {/* Background Videos with Crossfade */}
+    <section className="relative isolate h-[100svh] min-h-[36rem] w-full overflow-hidden bg-black">
+      {/* Full-cover landscape images with crossfade */}
       {HomeBannerData.map((slide, index) => (
         <div
           key={slide.id}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide ? 'opacity-100 z-0' : 'opacity-0 -z-10'
+            index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <video
-            src={vids[index]}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
+          <img
+            src={slide.image}
+            alt="Sumangali Pattu Center silk saree collection"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
           {/* Dark Overlay for Text Legibility */}
           <div className="home-banner__overlay absolute inset-0" />
@@ -73,7 +66,7 @@ const HomeBanner = () => {
       </div>
 
    
-    </div>
+    </section>
   );
 };
 

@@ -1,3 +1,7 @@
+import Banner1 from '../assets/saree/saree8.jpg';
+import Banner2 from'../assets/saree/saree9.jpg';
+import Banner3 from '../assets/saree/saree10.jpg';
+
 export const HomeBannerData = [
   {
     id: 1,
@@ -8,7 +12,7 @@ export const HomeBannerData = [
     primaryLink: "/about",
     secondaryBtn: "Call Now",
     secondaryLink: "tel:9944118349",
-    bgImage: "Banner1"
+    image: Banner1
   },
   {
     id: 2,
@@ -19,7 +23,7 @@ export const HomeBannerData = [
     primaryLink: "/about",
     secondaryBtn: "Call Now",
     secondaryLink: "tel:9944118349",
-    bgImage: "Banner2"
+    image: Banner2
   },
   {
     id: 3,
@@ -30,7 +34,7 @@ export const HomeBannerData = [
     primaryLink: "/services",
     secondaryBtn: "Call Now",
     secondaryLink: "tel:9944118349",
-    bgImage: "Banner3"
+    image: Banner3
   }
 ];
 

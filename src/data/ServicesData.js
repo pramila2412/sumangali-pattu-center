@@ -2,7 +2,10 @@ import saree1 from '../assets/saree/saree1.jpg';
 import saree2 from '../assets/saree/saree2.jpg';
 import saree3 from '../assets/saree/saree3.jpg';
 import saree4 from '../assets/saree/saree4.webp';
-
+import bannerVid1 from '../assets/videos/vid3.mp4';
+import bannerVid2 from '../assets/videos/vid4.mp4';
+import bannerVid3 from '../assets/videos/vid5.mp4';
+import bannerVid4 from '../assets/videos/vid2.mp4';
 export const ServicesData = {
   header: {
     title: "Our Services",
@@ -40,7 +43,7 @@ export const ServicesData = {
       image: saree2
     },
     {
-      id: "old-banarasi-silk",
+      id: "old-banarasi-silk-saree",
       title: "Old Banarasi Silk Saree",
       subtitle: "Best Buyers of Antique and Used Banarasi Silk Sarees",
       description1: "Banarasi silk sarees, known for their intricate brocade and opulent zari, hold immense value. Sumangali Pattu Center buys old, torn, or unused Banarasi sarees, offering you the best price for the pure silk and metal content.",

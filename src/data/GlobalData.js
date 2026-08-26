@@ -3,8 +3,8 @@ export const GlobalData = {
   logo: "logo.png", // Ensure this matches the filename in src/assets/logo/
   contactInfo: {
     phone: "9944118349",
-    email: "Akajith2928@gmail.com",
-    address: "6/224 Raji Nagar 3rd Street Nanmangalam Chennai -129"
+    email: "Sumangalipattucenter@gmail.com",
+    address: "No.13 4th Main Road Nanganallur Chennai-6000061 "
   },
   socialLinks: {
     facebook: "https://www.facebook.com/",
@@ -18,10 +18,10 @@ export const GlobalData = {
       name: "Services", 
       path: "/services",
       dropdown: [
-        { name: "Old Mysore Silk Saree", path: "/services/old-mysore-silk" },
+        { name: "Old Mysore Silk Saree", path: "/services/old-mysore-silk-saree" },
         { name: "Old Kanchipuram Silk Saree", path: "/services/old-kanchipuram-silk" },
-        { name: "Old Banarasi Silk Saree", path: "/services/old-banarasi-silk" },
-        { name: "Saree Exchange", path: "/services/saree-exchange" }
+        { name: "Old Banarasi Silk Saree", path: "/services/old-banarasi-silk-saree" },
+        { name: "Zari Testing & Evaluation", path: "/services/zari-testing-evaluation" }
       ]
     },
     { name: "Gallery", path: "/gallery" },

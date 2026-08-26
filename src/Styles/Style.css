@@ -72,6 +72,48 @@ button:hover {
   background: rgba(0, 0, 0, 0.4);
 }
 
+/* Admin login */
+.admin-login {
+  background: var(--primary-dark);
+}
+
+.admin-login__overlay {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 82%, transparent), rgba(31, 23, 36, 0.48) 55%, color-mix(in srgb, var(--secondary-dark) 58%, transparent)),
+    rgba(31, 23, 36, 0.52);
+}
+
+.admin-auth-card {
+  border: 1px solid color-mix(in srgb, var(--secondary) 45%, white);
+  background: color-mix(in srgb, white 94%, var(--background-gold));
+  box-shadow: 0 24px 64px rgba(31, 23, 36, 0.35);
+  backdrop-filter: blur(12px);
+}
+
+.admin-auth-card input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.admin-auth-card button[type="button"] {
+  background: transparent;
+  color: var(--primary);
+}
+
+.admin-auth-card button[type="button"]:hover {
+  background: var(--background-maroon);
+  color: var(--primary-dark);
+}
+
+.admin-auth-card button[type="submit"] {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.admin-auth-card button[type="submit"]:hover {
+  background: var(--primary-dark);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

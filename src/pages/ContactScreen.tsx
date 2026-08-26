@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ContactData } from '../data/ContactData';
-import bannerVid from '../assets/videos/vid1.mp4';
+import bannerVid from '../assets/videos/vid2.mp4';
 
 const ContactScreen = () => {
   const [formData, setFormData] = useState({
@@ -40,20 +40,22 @@ const ContactScreen = () => {
   return (
     <main>
       {/* Inner Banner Component */}
-      <div className="relative py-32 md:py-44 text-center text-white overflow-hidden bg-black flex flex-col justify-center min-h-[350px] lg:min-h-[450px]">
+      <section className="relative isolate flex min-h-[320px] items-center justify-center overflow-hidden bg-black py-24 text-center text-white sm:min-h-[380px] sm:py-32 lg:min-h-[460px] lg:py-40">
         <video
           src={bannerVid}
           autoPlay
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          preload="metadata"
+          aria-hidden="true"
+          className="absolute inset-0 -z-20 h-full w-full object-cover pointer-events-none"
         />
-        <div className="absolute inset-0 bg-black/60 pointer-events-none z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary)]/40 to-transparent pointer-events-none z-10"></div>
-        <div className="container mx-auto px-6 relative z-10">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 font-['Playfair_Display']">{ContactData.header.title}</h1>
-          <ul className="flex justify-center items-center space-x-2 font-medium">
+        <div className="absolute inset-0 -z-10 bg-black/55 pointer-events-none"></div>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[var(--primary)]/60 via-black/35 to-black/65 pointer-events-none"></div>
+        <div className="container relative z-10 mx-auto px-6">
+          <h1 className="mb-4 font-['Playfair_Display'] text-4xl font-extrabold leading-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.65)] md:text-5xl">{ContactData.header.title}</h1>
+          <ul className="flex items-center justify-center space-x-2 font-medium [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">
             <li>
               <Link to="/" className="hover:text-[var(--secondary)] transition-colors">Home</Link>
             </li>
@@ -61,7 +63,7 @@ const ContactScreen = () => {
             <li className="text-[var(--secondary)]">{ContactData.header.breadcrumb}</li>
           </ul>
         </div>
-      </div>
+      </section>
 
       <section className="py-20 lg:py-28 bg-[var(--background)]">
         <div className="container mx-auto px-6 lg:px-12">

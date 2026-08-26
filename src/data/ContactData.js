@@ -19,15 +19,15 @@ export const ContactData = {
       id: "address",
       icon: "map",
       title: "Address",
-      value: "6/224 Raji Nagar 3rd Street Nanmangalam Chennai -129",
+      value: "No.13 4th Main Road Nanganallur Chennai-6000061",
       link: null
     },
     {
       id: "email",
       icon: "envelope",
       title: "Email Address",
-      value: "Akajith2928@gmail.com",
-      link: "mailto:Akajith2928@gmail.com"
+      value: "Sumangalipattucenter@gmail.com",
+      link: "mailto:Sumangalipattucenter@gmail.com"
     }
   ],
   form: {
