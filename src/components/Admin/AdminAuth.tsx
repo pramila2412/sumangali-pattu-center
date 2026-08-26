@@ -23,6 +23,7 @@ interface AdminAuthProps {
   setConfirmPassword: (v: string) => void;
   otp: string[];
   secondsLeft: number;
+  isLoading: boolean;
   showPassword: boolean;
   setShowPassword: (v: boolean) => void;
   showConfirmPassword: boolean;
@@ -51,6 +52,7 @@ const AdminAuth = ({
   setConfirmPassword,
   otp,
   secondsLeft,
+  isLoading,
   showPassword,
   setShowPassword,
   showConfirmPassword,
@@ -162,6 +164,7 @@ const AdminAuth = ({
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   autoComplete="email"
+                  required
                   className={fieldClass}
                   placeholder="admin@example.com"
                 />
@@ -185,9 +188,10 @@ const AdminAuth = ({
               </div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-hover active:scale-[0.99]"
               >
-                Sign in
+                {isLoading ? "Signing in..." : "Sign in"}
               </button>
             </motion.form>
           )}
@@ -215,15 +219,17 @@ const AdminAuth = ({
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   autoComplete="email"
+                  required
                   className={fieldClass}
                   placeholder="admin@example.com"
                 />
               </label>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-hover"
               >
-                Send OTP
+                {isLoading ? "Sending OTP..." : "Send OTP"}
               </button>
               <button
                 type="button"
@@ -276,16 +282,17 @@ const AdminAuth = ({
               <button
                 type="button"
                 onClick={sendOtp}
-                disabled={secondsLeft > 0}
+                disabled={secondsLeft > 0 || isLoading}
                 className="block w-full text-sm font-semibold text-primary hover:text-hover hover:underline disabled:cursor-not-allowed disabled:text-gray-400"
               >
                 {secondsLeft ? `Resend OTP in ${secondsLeft}s` : "Resend OTP"}
               </button>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-hover"
               >
-                Verify OTP
+                {isLoading ? "Verifying..." : "Verify OTP"}
               </button>
             </motion.form>
           )}
@@ -321,9 +328,10 @@ const AdminAuth = ({
               </p>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-hover"
               >
-                Reset password
+                {isLoading ? "Resetting..." : "Reset password"}
               </button>
               <button
                 type="button"
