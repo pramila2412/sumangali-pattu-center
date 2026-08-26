@@ -126,3 +126,13 @@ export const HomeProcessData = {
     }
   ]
 };
+
+export const HomeCTAData = {
+  badge: "We Help You Sell Your Old Silk Sarees",
+  title: "Sell Your Sarees Hassle-Free with the Best Market Value",
+  description: "Get Instant Cash for Your Old Kanchipuram, Banarasi & Mysore Sarees! Reach out to our experts for a quick and free evaluation.",
+  primaryBtnText: "Contact Us Now",
+  primaryBtnLink: "/contact",
+  phone: "9944118349"
+};
+

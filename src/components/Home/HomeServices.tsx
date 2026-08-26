@@ -13,7 +13,7 @@ const HomeServices = () => {
           <span className="text-[var(--primary)] font-bold tracking-wider uppercase text-sm mb-2 block">
             What We Buy
           </span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-[var(--heading)] mb-6">
+          <h2 className="text-4xl lg:text-4xl font-bold text-[var(--heading)] mb-6">
             <BlurText text="Expert Saree Evaluation & Exchange" delay={40} />
           </h2>
           <p className="text-[var(--paragraph)] text-lg">
