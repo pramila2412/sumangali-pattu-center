@@ -80,9 +80,12 @@ const Header = () => {
 
           {/* Call to action button */}
           <div className="hidden lg:block">
-            <a href={`tel:${GlobalData.contactInfo.phone}`} className="bg-[var(--secondary)] hover:bg-[var(--secondary-dark)] text-[var(--primary)] font-bold py-2.5 px-6 rounded-full transition-colors flex items-center shadow-md">
-              <i className="bx bx-phone-call mr-2 text-xl"></i> Contact Us
-            </a>
+            <Link 
+              to="/contact" 
+              className="bg-[var(--secondary)] hover:bg-[var(--secondary-dark)] text-[var(--primary)] font-bold py-2.5 px-6 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center shadow-md"
+            >
+              <i className="bx bx-envelope mr-2 text-xl"></i> Contact Us
+            </Link>
           </div>
 
           {/* Mobile actions */}

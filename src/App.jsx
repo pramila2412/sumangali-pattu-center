@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import HomeScreen from './pages/HomeScreen';
 import AboutScreen from './pages/AboutScreen';
@@ -21,6 +22,10 @@ import { ToastProvider } from './components/Toast/ToastProvider';
 function AppContent() {
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith('/admin');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <>

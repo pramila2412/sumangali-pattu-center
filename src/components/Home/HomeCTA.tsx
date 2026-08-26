@@ -24,10 +24,13 @@ const HomeCTA = () => {
             <p className="text-white/80 text-lg max-w-xl">
               Get Instant Cash for Your Old Kanchipuram, Banarasi & Mysore Sarees! Reach out to our experts for a quick and free evaluation.
             </p>
-            <div className="pt-4">
-              <Link to="/contact" className="inline-block bg-[var(--gold-button)] hover:bg-[var(--gold-button-hover)] text-[var(--gold-button-text)] font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
-                Contact Us Now <i className="bx bx-chevron-right ml-1"></i>
+            <div className="pt-4 flex flex-wrap gap-4 items-center">
+              <Link to="/contact" className="inline-flex items-center bg-[var(--gold-button)] hover:bg-[var(--gold-button-hover)] text-[var(--gold-button-text)] font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+                Contact Us Now <i className="bx bx-chevron-right ml-1 text-xl"></i>
               </Link>
+              <a href="tel:9944118349" className="inline-flex items-center bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-8 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20">
+                <i className="bx bx-phone-call mr-2 text-xl text-[var(--secondary)]"></i> Call: 9944118349
+              </a>
             </div>
           </div>
           
