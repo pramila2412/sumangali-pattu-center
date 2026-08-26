@@ -124,11 +124,8 @@ const AdminAuth = ({
                 <Icon icon="solar:arrow-left-linear" className="h-5 w-5" />
               </button>
             )}
-            <div className="flex items-center justify-center gap-3">
-              <img src={logo} alt="Sumangali Pattu Center" className="h-12 w-12 rounded-full object-contain" />
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--primary)]">
-                Sumangali Pattu Center
-              </p>
+            <div className="flex items-center justify-center">
+              <img src={logo} alt="Sumangali Pattu Center" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain" />
             </div>
           </div>
           <h1 className="mt-2 text-2xl font-semibold text-[var(--heading)]">

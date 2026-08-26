@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import emailjs from '@emailjs/browser';
 import { ContactData } from '../data/ContactData';
+import BlurText from '../components/ReactBits/BlurText';
+import FadeContent from '../components/ReactBits/FadeContent';
 import bannerVid from '../assets/videos/vid2.mp4';
 
 const ContactScreen = () => {
@@ -12,6 +15,7 @@ const ContactScreen = () => {
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,15 +30,40 @@ const ContactScreen = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, you would handle API submission here
-    console.log('Form submitted:', formData);
-    setIsSubmitted(true);
-    
-    // Reset form after a delay
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
-    }, 5000);
+    setIsSending(true);
+
+    // Replace these with your actual EmailJS credentials
+    const serviceId = 'YOUR_SERVICE_ID';
+    const templateId = 'YOUR_TEMPLATE_ID';
+    const publicKey = 'YOUR_PUBLIC_KEY';
+
+    emailjs.send(
+      serviceId,
+      templateId,
+      {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+      },
+      publicKey
+    )
+    .then((result) => {
+        console.log('Email successfully sent!', result.text);
+        setIsSending(false);
+        setIsSubmitted(true);
+        
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
+        }, 5000);
+    })
+    .catch((error) => {
+        console.error('Failed to send email:', error);
+        setIsSending(false);
+        alert('Failed to send the message. Please try again later.');
+    });
   };
 
   return (
@@ -54,68 +83,76 @@ const ContactScreen = () => {
         <div className="absolute inset-0 -z-10 bg-black/55 pointer-events-none"></div>
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[var(--primary)]/60 via-black/35 to-black/65 pointer-events-none"></div>
         <div className="container relative z-10 mx-auto px-6">
-          <h1 className="mb-4 font-['Playfair_Display'] text-4xl font-extrabold leading-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.65)] md:text-5xl">{ContactData.header.title}</h1>
-          <ul className="flex items-center justify-center space-x-2 font-medium [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">
-            <li>
-              <Link to="/" className="hover:text-[var(--secondary)] transition-colors">Home</Link>
-            </li>
-            <li><i className="bx bx-chevrons-right text-[var(--secondary)]"></i></li>
-            <li className="text-[var(--secondary)]">{ContactData.header.breadcrumb}</li>
-          </ul>
+          <h1 className="mb-4 font-['Playfair_Display'] text-4xl font-extrabold leading-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.65)] md:text-5xl">
+            <BlurText text={ContactData.header.title} delay={40} />
+          </h1>
+          <FadeContent delay={300}>
+            <ul className="flex items-center justify-center space-x-2 font-medium [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">
+              <li>
+                <Link to="/" className="hover:text-[var(--secondary)] transition-colors">Home</Link>
+              </li>
+              <li><i className="bx bx-chevrons-right text-[var(--secondary)]"></i></li>
+              <li className="text-[var(--secondary)]">{ContactData.header.breadcrumb}</li>
+            </ul>
+          </FadeContent>
         </div>
       </section>
 
       <section className="py-20 lg:py-28 bg-[var(--background)]">
         <div className="container mx-auto px-6 lg:px-12">
           
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <FadeContent blur className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-[var(--heading)] mb-6">
               {ContactData.form.title}
             </h2>
-          </div>
+          </FadeContent>
 
           <div className="flex flex-col lg:flex-row gap-12">
             
             {/* Left Side: Contact Info */}
             <div className="lg:w-1/3 space-y-8">
-              <div>
-                <span className="text-[var(--primary)] font-bold tracking-wider uppercase text-sm mb-2 block">
-                  Contact Info
-                </span>
-                <h3 className="text-3xl font-bold text-[var(--heading)] mb-4">
-                  {ContactData.sectionInfo.title}
-                </h3>
-                <p className="text-[var(--paragraph)] mb-8">
-                  {ContactData.sectionInfo.description}
-                </p>
-              </div>
+              <FadeContent delay={200}>
+                <div>
+                  <span className="text-[var(--primary)] font-bold tracking-wider uppercase text-sm mb-2 block">
+                    Contact Info
+                  </span>
+                  <h3 className="text-3xl font-bold text-[var(--heading)] mb-4">
+                    {ContactData.sectionInfo.title}
+                  </h3>
+                  <p className="text-[var(--paragraph)] mb-8">
+                    {ContactData.sectionInfo.description}
+                  </p>
+                </div>
+              </FadeContent>
 
               <div className="space-y-6">
-                {ContactData.contactDetails.map((detail) => (
-                  <div key={detail.id} className="flex items-start bg-white p-6 rounded-xl shadow-sm border border-[var(--border)] hover:shadow-md transition-shadow">
-                    <div className="w-14 h-14 bg-[var(--background-gold)] rounded-full flex items-center justify-center text-[var(--primary)] text-2xl shrink-0 mr-4">
-                      <i className={`bx bx${detail.icon === 'map' ? 's' : ''}-${detail.icon}`}></i>
+                {ContactData.contactDetails.map((detail, idx) => (
+                  <FadeContent key={detail.id} delay={300 + idx * 100}>
+                    <div className="flex items-start bg-white p-6 rounded-xl shadow-sm border border-[var(--border)] hover:shadow-md transition-shadow">
+                      <div className="w-14 h-14 bg-[var(--background-gold)] rounded-full flex items-center justify-center text-[var(--primary)] text-2xl shrink-0 mr-4">
+                        <i className={`bx bx${detail.icon === 'map' ? 's' : ''}-${detail.icon}`}></i>
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-bold text-[var(--heading)] mb-2">{detail.title}</h4>
+                        {detail.link ? (
+                          <a href={detail.link} className="text-[var(--paragraph)] hover:text-[var(--primary)] transition-colors font-medium break-all">
+                            {detail.value}
+                          </a>
+                        ) : (
+                          <span className="text-[var(--paragraph)] leading-relaxed">
+                            {detail.value}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-xl font-bold text-[var(--heading)] mb-2">{detail.title}</h4>
-                      {detail.link ? (
-                        <a href={detail.link} className="text-[var(--paragraph)] hover:text-[var(--primary)] transition-colors font-medium break-all">
-                          {detail.value}
-                        </a>
-                      ) : (
-                        <span className="text-[var(--paragraph)] leading-relaxed">
-                          {detail.value}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                  </FadeContent>
                 ))}
               </div>
             </div>
 
             {/* Right Side: Contact Form */}
             <div className="lg:w-2/3">
-              <div className="bg-white p-8 md:p-12 rounded-2xl shadow-lg border border-[var(--border)]">
+              <FadeContent delay={400} className="bg-white p-8 md:p-12 rounded-2xl shadow-lg border border-[var(--border)]">
                 {isSubmitted ? (
                   <div className="bg-green-50 border border-green-200 text-green-800 rounded-xl p-8 text-center flex flex-col items-center justify-center h-full min-h-[400px]">
                     <i className="bx bx-check-circle text-6xl text-green-500 mb-4"></i>
@@ -206,17 +243,27 @@ const ContactScreen = () => {
                     <div className="text-center pt-4">
                       <button 
                         type="submit" 
-                        className="inline-flex items-center justify-center bg-[var(--secondary)] hover:bg-[var(--secondary-dark)] text-[var(--primary)] font-bold text-lg py-4 px-10 rounded-full transition-all transform hover:-translate-y-1 shadow-lg w-full md:w-auto"
+                        disabled={isSending}
+                        className={`inline-flex items-center justify-center bg-[var(--secondary)] text-[var(--primary)] font-bold text-lg py-4 px-10 rounded-full transition-all shadow-lg w-full md:w-auto ${
+                          isSending ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[var(--secondary-dark)] transform hover:-translate-y-1'
+                        }`}
                       >
-                        {ContactData.form.buttonText} <i className="bx bx-chevron-right ml-2 text-2xl -mr-2"></i>
+                        {isSending ? (
+                          <>
+                            Sending... <i className="bx bx-loader-alt bx-spin ml-2 text-2xl -mr-2"></i>
+                          </>
+                        ) : (
+                          <>
+                            {ContactData.form.buttonText} <i className="bx bx-chevron-right ml-2 text-2xl -mr-2"></i>
+                          </>
+                        )}
                       </button>
                     </div>
 
                   </form>
                 )}
-              </div>
+              </FadeContent>
             </div>
-
           </div>
         </div>
       </section>

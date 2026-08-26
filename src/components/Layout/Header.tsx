@@ -43,10 +43,21 @@ const Header = () => {
               <div key={idx} className="relative group">
                 <Link 
                   to={link.path} 
-                  className={`font-semibold uppercase tracking-wide text-sm transition-colors py-2 flex items-center ${location.pathname === link.path ? 'text-[var(--primary)]' : 'text-[var(--heading)] hover:text-[var(--primary)]'}`}
+                  className={`relative font-semibold uppercase tracking-wide text-sm transition-colors py-2 flex items-center ${
+                    location.pathname === link.path || (link.dropdown && location.pathname.startsWith(link.path))
+                      ? 'text-[var(--primary)]' 
+                      : 'text-[var(--heading)] hover:text-[var(--primary)]'
+                  }`}
                 >
                   {link.name}
                   {link.dropdown && <i className="bx bx-chevron-down ml-1"></i>}
+                  
+                  {/* Animated Underline */}
+                  <span className={`absolute bottom-0 left-0 h-[2px] bg-[var(--primary)] rounded-full transition-all duration-300 ${
+                    location.pathname === link.path || (link.dropdown && location.pathname.startsWith(link.path))
+                      ? 'w-full' 
+                      : 'w-0 group-hover:w-full'
+                  }`}></span>
                 </Link>
                 
                 {/* Dropdown menu */}

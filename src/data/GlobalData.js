@@ -9,7 +9,6 @@ export const GlobalData = {
   socialLinks: {
     facebook: "https://www.facebook.com/",
     instagram: "https://www.instagram.com/",
-    linkedin: "https://www.linkedin.com/"
   },
   navLinks: [
     { name: "Home", path: "/" },

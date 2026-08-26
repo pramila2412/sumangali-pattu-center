@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { GalleryData } from '../data/GalleryData';
+import BlurText from '../components/ReactBits/BlurText';
+import FadeContent from '../components/ReactBits/FadeContent';
 import bannerVid from '../assets/videos/vid1.mp4';
 
 const GalleryScreen = () => {
@@ -77,14 +79,18 @@ const GalleryScreen = () => {
         <div className="absolute inset-0 -z-10 bg-black/55 pointer-events-none"></div>
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[var(--primary)]/60 via-black/35 to-black/65 pointer-events-none"></div>
         <div className="container relative z-10 mx-auto px-6">
-          <h1 className="mb-4 font-['Playfair_Display'] text-4xl font-extrabold leading-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.65)] md:text-5xl">{GalleryData.header.title}</h1>
-          <ul className="flex items-center justify-center space-x-2 font-medium [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">
-            <li>
-              <Link to="/" className="hover:text-[var(--secondary)] transition-colors">Home</Link>
-            </li>
-            <li><i className="bx bx-chevrons-right text-[var(--secondary)]"></i></li>
-            <li className="text-[var(--secondary)]">{GalleryData.header.breadcrumb}</li>
-          </ul>
+          <h1 className="mb-4 font-['Playfair_Display'] text-4xl font-extrabold leading-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.65)] md:text-5xl">
+            <BlurText text={GalleryData.header.title} delay={40} />
+          </h1>
+          <FadeContent delay={300}>
+            <ul className="flex items-center justify-center space-x-2 font-medium [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">
+              <li>
+                <Link to="/" className="hover:text-[var(--secondary)] transition-colors">Home</Link>
+              </li>
+              <li><i className="bx bx-chevrons-right text-[var(--secondary)]"></i></li>
+              <li className="text-[var(--secondary)]">{GalleryData.header.breadcrumb}</li>
+            </ul>
+          </FadeContent>
         </div>
       </section>
 
@@ -92,42 +98,43 @@ const GalleryScreen = () => {
       <section className="py-20 lg:py-28 bg-[var(--background)]">
         <div className="container mx-auto px-6 lg:px-12">
           
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <FadeContent blur className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-[var(--primary)] font-bold tracking-wider uppercase text-sm mb-2 block">
               {GalleryData.sectionInfo.tagline}
             </span>
             <h2 className="text-4xl lg:text-5xl font-bold text-[var(--heading)] mb-6">
               {GalleryData.sectionInfo.title}
             </h2>
-          </div>
+          </FadeContent>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {GalleryData.categories.map((category) => (
-              <div 
-                key={category.id} 
-                onClick={() => openLightbox(category)}
-                className="group rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 relative border border-[var(--border)] cursor-pointer bg-white"
-              >
-                <div className="h-72 w-full overflow-hidden relative">
-                  <img 
-                    src={category.coverImage} 
-                    alt={category.title} 
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--black)]/90 via-[var(--black)]/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-                  {/* Category Info Overlay */}
-                  <div className="absolute bottom-0 left-0 w-full p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <div className="bg-[var(--secondary)] text-[var(--primary-dark)] text-xs font-bold px-3 py-1 rounded-full inline-block mb-3 shadow-md">
-                      {category.images.length} Photos
+            {GalleryData.categories.map((category, idx) => (
+              <FadeContent key={category.id} delay={idx * 150} duration={800}>
+                <div 
+                  onClick={() => openLightbox(category)}
+                  className="group rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 relative border border-[var(--border)] cursor-pointer bg-white"
+                >
+                  <div className="h-72 w-full overflow-hidden relative">
+                    <img 
+                      src={category.coverImage} 
+                      alt={category.title} 
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--black)]/90 via-[var(--black)]/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Category Info Overlay */}
+                    <div className="absolute bottom-0 left-0 w-full p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                      <div className="bg-[var(--secondary)] text-[var(--primary-dark)] text-xs font-bold px-3 py-1 rounded-full inline-block mb-3 shadow-md">
+                        {category.images.length} Photos
+                      </div>
+                      <h3 className="text-2xl font-bold font-['Playfair_Display'] mb-1">{category.title}</h3>
+                      <p className="text-white/80 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                        {category.description}
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold font-['Playfair_Display'] mb-1">{category.title}</h3>
-                    <p className="text-white/80 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                      {category.description}
-                    </p>
                   </div>
                 </div>
-              </div>
+              </FadeContent>
             ))}
           </div>
 

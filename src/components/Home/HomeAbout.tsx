@@ -1,5 +1,7 @@
 import React from 'react';
 import { HomeAboutData } from '../../data/HomeData';
+import FadeContent from '../ReactBits/FadeContent';
+import SplitText from '../ReactBits/SplitText';
 import model1 from '../../assets/saree/model1.avif';
 import model2 from '../../assets/saree/model2.avif';
 import model3 from '../../assets/saree/model3.avif';
@@ -12,17 +14,19 @@ const HomeAbout = () => {
           
           {/* Content Left */}
           <div className="lg:w-1/2 space-y-6">
-            <div className="inline-block px-4 py-1.5 rounded-full bg-[var(--background-maroon)] border border-[var(--primary-light)] text-[var(--primary)] font-semibold text-sm mb-2">
-              {HomeAboutData.experience}
-            </div>
-            
-            <h2 className="text-4xl lg:text-5xl font-extrabold leading-tight text-[var(--heading)]">
-              {HomeAboutData.title}
-            </h2>
-            
-            <p className="text-lg text-[var(--paragraph)] leading-relaxed">
-              {HomeAboutData.description}
-            </p>
+            <FadeContent blur duration={800}>
+              <div className="inline-block px-4 py-1.5 rounded-full bg-[var(--background-maroon)] border border-[var(--primary-light)] text-[var(--primary)] font-semibold text-sm mb-2">
+                {HomeAboutData.experience}
+              </div>
+              
+              <h2 className="text-4xl lg:text-5xl font-extrabold leading-tight text-[var(--heading)] mb-4 mt-2">
+                <SplitText text={HomeAboutData.title} delay={50} />
+              </h2>
+              
+              <p className="text-lg text-[var(--paragraph)] leading-relaxed">
+                {HomeAboutData.description}
+              </p>
+            </FadeContent>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
               {HomeAboutData.features.map((feature, idx) => (
