@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ctaImg from '../../assets/saree/saree5.jpg';
 
 const HomeCTA = () => {
@@ -24,9 +25,9 @@ const HomeCTA = () => {
               Get Instant Cash for Your Old Kanchipuram, Banarasi & Mysore Sarees! Reach out to our experts for a quick and free evaluation.
             </p>
             <div className="pt-4">
-              <a href="/contact" className="inline-block bg-[var(--gold-button)] hover:bg-[var(--gold-button-hover)] text-[var(--gold-button-text)] font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <Link to="/contact" className="inline-block bg-[var(--gold-button)] hover:bg-[var(--gold-button-hover)] text-[var(--gold-button-text)] font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Contact Us Now <i className="bx bx-chevron-right ml-1"></i>
-              </a>
+              </Link>
             </div>
           </div>
           

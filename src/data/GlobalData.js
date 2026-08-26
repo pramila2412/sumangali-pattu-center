@@ -18,10 +18,10 @@ export const GlobalData = {
       name: "Services", 
       path: "/services",
       dropdown: [
-        { name: "Old Mysore Silk Saree", path: "/services/old-mysore-silk" },
+        { name: "Old Mysore Silk Saree", path: "/services/old-mysore-silk-saree" },
         { name: "Old Kanchipuram Silk Saree", path: "/services/old-kanchipuram-silk" },
-        { name: "Old Banarasi Silk Saree", path: "/services/old-banarasi-silk" },
-        { name: "Saree Exchange", path: "/services/saree-exchange" }
+        { name: "Old Banarasi Silk Saree", path: "/services/old-banarasi-silk-saree" },
+        { name: "Zari Testing & Evaluation", path: "/services/zari-testing-evaluation" }
       ]
     },
     { name: "Gallery", path: "/gallery" },
