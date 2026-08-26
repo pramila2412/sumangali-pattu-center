@@ -8,6 +8,7 @@ const Header = () => {
   const location = useLocation();
   const phones = GlobalData.contactInfo.phones || [{ id: 'primary-phone', value: GlobalData.contactInfo.phone }];
   const emails = GlobalData.contactInfo.emails || [{ id: 'primary-email', value: GlobalData.contactInfo.email }];
+  const socialChannels = GlobalData.socialLinks.channels || [];
   const brandLogo = GlobalData.logo?.startsWith('/uploads/') ? GlobalData.logo : Logo;
 
   return (
@@ -20,9 +21,19 @@ const Header = () => {
             {emails.map((email) => <a key={email.id} href={`mailto:${email.value}`} className="hover:text-[var(--secondary)] transition-colors flex items-center"><i className="bx bxs-envelope mr-2"></i>{email.value}</a>)}
           </div>
           <div className="flex space-x-4">
-            <a href={GlobalData.socialLinks.facebook} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-facebook text-lg"></i></a>
-            <a href={GlobalData.socialLinks.instagram} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-instagram text-lg"></i></a>
-          
+            {socialChannels.map((social) => (
+              <a
+                key={social.id}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[var(--secondary)] transition-colors"
+                title={social.platform}
+                aria-label={`Visit us on ${social.platform}`}
+              >
+                <i className={`bx ${social.icon} text-lg`}></i>
+              </a>
+            ))}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import Logo from '../../assets/logo/logo.png';
 const Footer = () => {
   const phones = GlobalData.contactInfo.phones || [{ id: 'primary-phone', value: GlobalData.contactInfo.phone }];
   const emails = GlobalData.contactInfo.emails || [{ id: 'primary-email', value: GlobalData.contactInfo.email }];
+  const socialChannels = GlobalData.socialLinks.channels || [];
   const brandLogo = GlobalData.logo?.startsWith('/uploads/') ? GlobalData.logo : Logo;
   return (
     <footer className="bg-[var(--black)] pt-20 pb-6 text-white/80">
@@ -21,12 +22,19 @@ const Footer = () => {
               {GlobalData.footer.about}
             </p>
             <div className="flex space-x-4">
-              <a href={GlobalData.socialLinks.facebook} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--secondary)] hover:text-[var(--primary)] transition-all">
-                <i className="bx bxl-facebook text-xl"></i>
-              </a>
-              <a href={GlobalData.socialLinks.instagram} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--secondary)] hover:text-[var(--primary)] transition-all">
-                <i className="bx bxl-instagram text-xl"></i>
-              </a>
+              {socialChannels.map((social) => (
+                <a
+                  key={social.id}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--secondary)] hover:text-[var(--primary)] transition-all"
+                  title={social.platform}
+                  aria-label={`Visit us on ${social.platform}`}
+                >
+                  <i className={`bx ${social.icon} text-xl`}></i>
+                </a>
+              ))}
             </div>
           </div>
 

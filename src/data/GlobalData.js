@@ -11,6 +11,11 @@ export const GlobalData = {
   socialLinks: {
     facebook: "https://www.facebook.com/",
     instagram: "https://www.instagram.com/",
+    channels: [
+      { id: "s1", platform: "Facebook", url: "https://www.facebook.com/", icon: "bxl-facebook" },
+      { id: "s2", platform: "Instagram", url: "https://www.instagram.com/", icon: "bxl-instagram" },
+      { id: "google-review", platform: "Google Review", url: "https://www.google.com/maps/search/?api=1&query=Sumangali%20Pattu%20Center%20Nanganallur", icon: "bxl-google" }
+    ],
   },
   navLinks: [
     { name: "Home", path: "/" },

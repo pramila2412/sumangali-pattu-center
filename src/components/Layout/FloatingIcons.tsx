@@ -34,9 +34,11 @@ const FloatingIcons = () => {
     }
   };
 
-  // Format phone number for WhatsApp (remove spaces and special characters)
-  const waNumber = GlobalData.contactInfo.phone.replace(/[^0-9]/g, '');
-  const waLink = `https://wa.me/91${waNumber}`; // Assuming India country code +91
+  // The primary contact number is managed in Admin > Contact Settings.
+  // Accept both local Indian numbers and numbers entered with the +91 prefix.
+  const primaryPhone = GlobalData.contactInfo.phone;
+  const waNumber = primaryPhone.replace(/\D/g, '').replace(/^91/, '');
+  const waLink = `https://wa.me/91${waNumber}`;
 
   return (
     <div
@@ -47,16 +49,33 @@ const FloatingIcons = () => {
       }`}
     >
       
-      {/* Instagram */}
-      <a 
-        href={GlobalData.socialLinks.instagram} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transform hover:scale-110 transition-all duration-300 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600"
-        title="Follow us on Instagram"
-      >
-        <i className="bx bxl-instagram text-2xl"></i>
-      </a>
+      {/* Only channels added in Admin > Contact Settings are shown here. */}
+      {(GlobalData.socialLinks.channels || []).map((social) => {
+        const isGoogleReview = social.platform === 'Google Review';
+        const background = social.platform === 'Facebook'
+          ? 'bg-[#1877F2]'
+          : social.platform === 'Instagram'
+            ? 'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600'
+            : 'bg-[var(--primary)]';
+
+        return (
+          <a
+            key={social.id}
+            href={social.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-300 ${isGoogleReview ? 'bg-white border border-gray-200 overflow-hidden' : `text-white ${background}`}`}
+            title={isGoogleReview ? 'Review us on Google' : `Follow us on ${social.platform}`}
+            aria-label={isGoogleReview ? 'Review Sumangali Pattu Center on Google' : `Visit us on ${social.platform}`}
+          >
+            {isGoogleReview ? (
+              <img src={GoogleReview} alt="Google Review" className="w-full h-full object-contain p-1" />
+            ) : (
+              <i className={`bx ${social.icon} text-2xl`}></i>
+            )}
+          </a>
+        );
+      })}
 
       {/* WhatsApp */}
       <a 
@@ -71,23 +90,11 @@ const FloatingIcons = () => {
 
       {/* Phone */}
       <a 
-        href={`tel:${GlobalData.contactInfo.phone}`}
+        href={`tel:${primaryPhone}`}
         className="w-12 h-12 rounded-full flex items-center justify-center text-[var(--secondary)] shadow-lg transform hover:scale-110 transition-all duration-300 bg-[var(--primary)] border border-[var(--secondary)]/30"
         title="Call Us"
       >
         <i className="bx bxs-phone-call text-2xl"></i>
-      </a>
-
-      {/* Google Review */}
-      <a
-        href="https://www.google.com/maps/search/?api=1&query=Sumangali%20Pattu%20Center%20Nanganallur"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-12 h-12 rounded-full flex items-center justify-center bg-white shadow-lg transform hover:scale-110 transition-all duration-300 border border-gray-200 overflow-hidden"
-        title="Review us on Google"
-        aria-label="Review Sumangali Pattu Center on Google"
-      >
-        <img src={GoogleReview} alt="Google Review" className="w-full h-full object-contain p-1" />
       </a>
 
       {/* Scroll Up/Down Button */}

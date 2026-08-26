@@ -7,6 +7,19 @@ import { HomeAboutData, HomeProcessData, HomeCTAData } from '../data/HomeData';
 import { GlobalData } from '../data/GlobalData';
 import { ContactData } from '../data/ContactData';
 
+const googleReviewLink = {
+  id: 'google-review',
+  platform: 'Google Review',
+  url: 'https://www.google.com/maps/search/?api=1&query=Sumangali%20Pattu%20Center%20Nanganallur',
+  icon: 'bxl-google',
+};
+
+const withRequiredGoogleReview = (socials = []) => (
+  socials.some((item) => item.platform === 'Google Review')
+    ? socials
+    : [...socials, googleReviewLink]
+);
+
 // Existing public components consume these data modules. Hydrating the modules before
 // they render keeps all public locations in sync without duplicating content logic.
 export function useCmsBootstrap() {
@@ -51,8 +64,10 @@ export function useCmsBootstrap() {
         if (contact.logo) GlobalData.logo = contact.logo;
         GlobalData.contactInfo.phones = phones.length ? phones : GlobalData.contactInfo.phones;
         GlobalData.contactInfo.emails = emails.length ? emails : GlobalData.contactInfo.emails;
-        const byPlatform = (name) => contact.socials?.find((item) => item.platform === name)?.url;
+        const socialChannels = withRequiredGoogleReview(contact.socials?.filter((item) => item.url?.trim()) ?? []);
+        const byPlatform = (name) => socialChannels.find((item) => item.platform === name)?.url;
         Object.assign(GlobalData.socialLinks, { facebook: byPlatform('Facebook') ?? GlobalData.socialLinks.facebook, instagram: byPlatform('Instagram') ?? GlobalData.socialLinks.instagram });
+        GlobalData.socialLinks.channels = socialChannels;
         Object.assign(GlobalData.footer, { about: contact.footerAbout ?? GlobalData.footer.about, copyright: contact.footerCopyright ?? GlobalData.footer.copyright });
         Object.assign(ContactData.sectionInfo, { title: contact.contactIntroTitle ?? ContactData.sectionInfo.title, description: contact.contactIntroDesc ?? ContactData.sectionInfo.description });
         ContactData.form.successMessage = contact.formSuccessMsg ?? ContactData.form.successMessage;
