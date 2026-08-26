@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import { HomeBannerData } from '../../data/HomeData';
+import BlurText from '../ReactBits/BlurText';
+import FadeContent from '../ReactBits/FadeContent';
 
 const HomeBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -44,14 +46,22 @@ const HomeBanner = () => {
           </div>
 
           {/* Main Title */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight whitespace-pre-line text-white">
-            {HomeBannerData[currentSlide].title}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-white mb-2">
+            <BlurText 
+              key={`title-${currentSlide}`} 
+              text={HomeBannerData[currentSlide].title.replace(/\n/g, ' ')} 
+              delay={30} 
+            />
           </h1>
 
           {/* Description */}
-          <p className="text-lg md:text-xl leading-relaxed max-w-2xl text-white/90">
-            {HomeBannerData[currentSlide].description}
-          </p>
+          <div key={`desc-${currentSlide}`}>
+            <FadeContent delay={300}>
+              <p className="text-lg md:text-xl leading-relaxed max-w-2xl text-white/90">
+                {HomeBannerData[currentSlide].description}
+              </p>
+            </FadeContent>
+          </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-4">

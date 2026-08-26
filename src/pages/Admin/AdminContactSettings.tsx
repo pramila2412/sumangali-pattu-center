@@ -33,13 +33,13 @@ export const AdminContactSettings: React.FC = () => {
   // 1. Phone Numbers State
   const [phones, setPhones] = useState<ContactFieldItem[]>([
     { id: 'p1', label: 'Primary Contact & WhatsApp', value: GlobalData.contactInfo.phone, isPrimary: true },
-    { id: 'p2', label: 'Secondary / Alternate Mobile', value: '9840123456', isPrimary: false }
+    { id: 'p2', label: 'Secondary / Alternate Mobile', value: GlobalData.contactInfo.phone, isPrimary: false }
   ]);
 
   // 2. Email Addresses State
   const [emails, setEmails] = useState<ContactFieldItem[]>([
     { id: 'e1', label: 'Primary Inquiry Email', value: GlobalData.contactInfo.email, isPrimary: true },
-    { id: 'e2', label: 'Support & Valuation Email', value: 'support@sumangalipattu.com', isPrimary: false }
+    { id: 'e2', label: 'Support & Valuation Email', value: GlobalData.contactInfo.email, isPrimary: false }
   ]);
 
   // 3. Address State
@@ -49,7 +49,6 @@ export const AdminContactSettings: React.FC = () => {
   const [socials, setSocials] = useState<SocialLinkItem[]>([
     { id: 's1', platform: 'Facebook', url: GlobalData.socialLinks.facebook, icon: 'bxl-facebook' },
     { id: 's2', platform: 'Instagram', url: GlobalData.socialLinks.instagram, icon: 'bxl-instagram' },
-    { id: 's3', platform: 'LinkedIn', url: GlobalData.socialLinks.linkedin, icon: 'bxl-linkedin' },
   ]);
 
   // 5. Footer & Contact Screen Content State
@@ -508,7 +507,7 @@ export const AdminContactSettings: React.FC = () => {
                   Social Media Channels ({socials.length})
                 </h3>
                 <p className="text-xs text-stone-500">
-                  Manage Facebook, Instagram, LinkedIn, WhatsApp & YouTube profile URLs
+                  Manage Facebook, Instagram, WhatsApp & YouTube profile URLs
                 </p>
               </div>
             </div>

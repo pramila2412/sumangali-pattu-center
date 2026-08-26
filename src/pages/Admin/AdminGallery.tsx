@@ -137,6 +137,10 @@ export const AdminGallery: React.FC = () => {
 
   // 2. Photo Actions inside Selected Collection
   const handleOpenAddPhoto = () => {
+    if (selectedCategory && selectedCategory.images.length >= 6) {
+      showToast('You can only upload up to 6 photos per collection.', 'error');
+      return;
+    }
     setImagePickerTarget('newPhoto');
     setIsImagePickerOpen(true);
   };
@@ -341,9 +345,14 @@ export const AdminGallery: React.FC = () => {
                   <span>/</span>
                   <span className="text-[#6A0F1F] font-bold">{selectedCategory.title}</span>
                 </div>
-                <h3 className="text-xl font-bold font-['Playfair_Display'] text-[#1F1215]">
-                  {selectedCategory.title} Photos ({selectedCategory.images.length})
-                </h3>
+                <div className="flex flex-col">
+                  <h3 className="text-xl font-bold font-['Playfair_Display'] text-[#1F1215]">
+                    {selectedCategory.title} Photos ({selectedCategory.images.length}/6)
+                  </h3>
+                  <p className="text-[10px] sm:text-xs text-stone-500 mt-1 flex items-center gap-1">
+                    <i className="bx bx-info-circle"></i> Limit: Max 6 photos. File size up to 10MB.
+                  </p>
+                </div>
               </div>
             </div>
 

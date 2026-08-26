@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Link, Routes, Route, useParams } from 'react-router-dom';
 import { ServicesData } from '../data/ServicesData';
 import HomeServices from '../components/Home/HomeServices';
+import BlurText from '../components/ReactBits/BlurText';
+import FadeContent from '../components/ReactBits/FadeContent';
 import bannerVid from '../assets/videos/vid4.mp4';
 
 // Inner Banner Component
@@ -20,14 +22,18 @@ const ServicesBanner = ({ title, breadcrumb }: { title: string, breadcrumb: stri
     <div className="absolute inset-0 -z-10 bg-black/55 pointer-events-none"></div>
     <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[var(--primary)]/60 via-black/35 to-black/65 pointer-events-none"></div>
     <div className="container relative z-10 mx-auto px-6">
-      <h1 className="mb-4 font-['Playfair_Display'] text-4xl font-extrabold leading-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.65)] md:text-5xl">{title}</h1>
-      <ul className="flex items-center justify-center space-x-2 font-medium [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">
-        <li>
-          <Link to="/" className="hover:text-[var(--secondary)] transition-colors">Home</Link>
-        </li>
-        <li><i className="bx bx-chevrons-right text-[var(--secondary)]"></i></li>
-        <li className="text-[var(--secondary)]">{breadcrumb}</li>
-      </ul>
+      <h1 className="mb-4 font-['Playfair_Display'] text-4xl font-extrabold leading-tight [text-shadow:0_2px_14px_rgba(0,0,0,0.65)] md:text-5xl">
+        <BlurText text={title} delay={40} />
+      </h1>
+      <FadeContent delay={300}>
+        <ul className="flex items-center justify-center space-x-2 font-medium [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">
+          <li>
+            <Link to="/" className="hover:text-[var(--secondary)] transition-colors">Home</Link>
+          </li>
+          <li><i className="bx bx-chevrons-right text-[var(--secondary)]"></i></li>
+          <li className="text-[var(--secondary)]">{breadcrumb}</li>
+        </ul>
+      </FadeContent>
     </div>
   </section>
 );
@@ -117,27 +123,29 @@ const ServicesIndex = () => {
       <div className="py-20 lg:py-28 bg-[var(--background)]">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {ServicesData.servicesList.map((service) => (
-              <div key={service.id} className="bg-white rounded-2xl overflow-hidden shadow-lg border border-[var(--border)] group flex flex-col h-full">
-                <div className="h-64 overflow-hidden relative">
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--primary-dark)]/80 to-transparent"></div>
-                  <h3 className="absolute bottom-6 left-6 text-2xl font-bold text-white z-10">{service.title}</h3>
+            {ServicesData.servicesList.map((service, idx) => (
+              <FadeContent key={service.id} delay={idx * 150} duration={800} className="h-full">
+                <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-[var(--border)] group flex flex-col h-full">
+                  <div className="h-64 overflow-hidden relative">
+                    <img 
+                      src={service.image} 
+                      alt={service.title} 
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--primary-dark)]/80 to-transparent"></div>
+                    <h3 className="absolute bottom-6 left-6 text-2xl font-bold text-white z-10">{service.title}</h3>
+                  </div>
+                  <div className="p-8 flex-grow flex flex-col">
+                    <p className="text-[var(--paragraph)] mb-6 flex-grow">{service.description1.substring(0, 150)}...</p>
+                    <Link 
+                      to={`/services/${service.id}`} 
+                      className="inline-flex items-center text-[var(--primary)] font-bold hover:text-[var(--secondary)] transition-colors"
+                    >
+                      Read More <i className="bx bx-right-arrow-alt ml-2 text-xl"></i>
+                    </Link>
+                  </div>
                 </div>
-                <div className="p-8 flex-grow flex flex-col">
-                  <p className="text-[var(--paragraph)] mb-6 flex-grow">{service.description1.substring(0, 150)}...</p>
-                  <Link 
-                    to={`/services/${service.id}`} 
-                    className="inline-flex items-center text-[var(--primary)] font-bold hover:text-[var(--secondary)] transition-colors"
-                  >
-                    Read More <i className="bx bx-right-arrow-alt ml-2 text-xl"></i>
-                  </Link>
-                </div>
-              </div>
+              </FadeContent>
             ))}
           </div>
         </div>

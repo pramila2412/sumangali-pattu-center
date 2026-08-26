@@ -80,6 +80,10 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
       alert('Please select a valid image file (JPG, PNG, WEBP, AVIF).');
       return;
     }
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File size must be 10MB or less.');
+      return;
+    }
     setUploadedFileName(file.name);
     const sizeInKB = (file.size / 1024).toFixed(1);
     setUploadedFileSize(file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` : `${sizeInKB} KB`);
