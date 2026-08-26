@@ -4,6 +4,9 @@ import { GlobalData } from '../../data/GlobalData';
 import Logo from '../../assets/logo/logo.png';
 
 const Footer = () => {
+  const phones = GlobalData.contactInfo.phones || [{ id: 'primary-phone', value: GlobalData.contactInfo.phone }];
+  const emails = GlobalData.contactInfo.emails || [{ id: 'primary-email', value: GlobalData.contactInfo.email }];
+  const brandLogo = GlobalData.logo?.startsWith('/uploads/') ? GlobalData.logo : Logo;
   return (
     <footer className="bg-[var(--black)] pt-20 pb-6 text-white/80">
       <div className="container mx-auto px-6 lg:px-12">
@@ -12,7 +15,7 @@ const Footer = () => {
           {/* About Widget */}
           <div>
             <div className="mb-6">
-              <img src={Logo} alt="Sumangali Pattu Center Logo" className="h-32 w-auto object-contain" />
+              <img src={brandLogo} alt="Sumangali Pattu Center Logo" className="h-32 w-auto object-contain" />
             </div>
             <p className="mb-6 leading-relaxed">
               {GlobalData.footer.about}
@@ -63,14 +66,8 @@ const Footer = () => {
                 <i className="bx bx-map text-[var(--secondary)] text-2xl mr-3 mt-1"></i>
                 <span>{GlobalData.contactInfo.address}</span>
               </li>
-              <li className="flex items-center">
-                <i className="bx bx-phone-call text-[var(--secondary)] text-2xl mr-3"></i>
-                <a href={`tel:${GlobalData.contactInfo.phone}`} className="hover:text-[var(--secondary)] transition-colors">{GlobalData.contactInfo.phone}</a>
-              </li>
-              <li className="flex items-center">
-                <i className="bx bx-envelope text-[var(--secondary)] text-2xl mr-3"></i>
-                <a href={`mailto:${GlobalData.contactInfo.email}`} className="hover:text-[var(--secondary)] transition-colors">{GlobalData.contactInfo.email}</a>
-              </li>
+              {phones.map((phone) => <li key={phone.id} className="flex items-center"><i className="bx bx-phone-call text-[var(--secondary)] text-2xl mr-3"></i><a href={`tel:${phone.value}`} className="hover:text-[var(--secondary)] transition-colors">{phone.value}</a></li>)}
+              {emails.map((email) => <li key={email.id} className="flex items-center"><i className="bx bx-envelope text-[var(--secondary)] text-2xl mr-3"></i><a href={`mailto:${email.value}`} className="hover:text-[var(--secondary)] transition-colors">{email.value}</a></li>)}
             </ul>
           </div>
 

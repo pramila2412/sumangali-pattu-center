@@ -4,6 +4,8 @@ export const GlobalData = {
   contactInfo: {
     phone: "9944118349",
     email: "Sumangalipattucenter@gmail.com",
+    phones: [{ id: "p1", label: "Primary Contact & WhatsApp", value: "9944118349", isPrimary: true }],
+    emails: [{ id: "e1", label: "Primary Inquiry Email", value: "Sumangalipattucenter@gmail.com", isPrimary: true }],
     address: "No.13 4th Main Road Nanganallur Chennai-6000061 "
   },
   socialLinks: {

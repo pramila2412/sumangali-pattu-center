@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HomeAboutData, HomeProcessData, HomeCTAData } from '../../data/HomeData';
 import { ServicesData } from '../../data/ServicesData';
 import { GalleryData } from '../../data/GalleryData';
 import { GlobalData } from '../../data/GlobalData';
 import { useToast } from '../../components/Toast/ToastProvider';
+import { loadCmsSection, saveCmsSection } from '../../lib/cms';
 import ctaImg from '../../assets/saree/saree5.jpg';
 
 interface AboutFeature {
@@ -101,6 +102,31 @@ export const AdminDashboard: React.FC = () => {
     index: number;
     title: string;
   } | null>(null);
+  const [cmsReady, setCmsReady] = useState(false);
+
+  useEffect(() => {
+    loadCmsSection<{ aboutGeneral: typeof aboutGeneral; aboutFeatures: AboutFeature[]; processGeneral: typeof processGeneral; processSteps: ProcessStep[]; ctaData: typeof ctaData }>('dashboard')
+      .then((saved) => {
+        if (!saved) return;
+        setAboutGeneral(saved.aboutGeneral ?? aboutGeneral);
+        setAboutFeatures(saved.aboutFeatures ?? aboutFeatures);
+        setProcessGeneral(saved.processGeneral ?? processGeneral);
+        setProcessSteps(saved.processSteps ?? processSteps);
+        setCtaData(saved.ctaData ?? ctaData);
+      })
+      .catch(() => showToast('Saved home-page content could not be loaded.', 'error'))
+      .finally(() => setCmsReady(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!cmsReady) return;
+    const timer = window.setTimeout(() => {
+      saveCmsSection('dashboard', { aboutGeneral, aboutFeatures, processGeneral, processSteps, ctaData })
+        .catch((error) => showToast(error.message, 'error'));
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [aboutGeneral, aboutFeatures, processGeneral, processSteps, ctaData, cmsReady, showToast]);
 
   // --- Handlers: Home About ---
   const handleSaveAboutGeneral = (e: React.FormEvent) => {

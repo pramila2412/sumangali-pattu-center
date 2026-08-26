@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ServicesData } from '../../data/ServicesData';
 import ImagePickerModal from '../../components/Admin/ImagePickerModal';
 import { useToast } from '../../components/Toast/ToastProvider';
+import { loadCmsSection, saveCmsSection, uploadCmsImage } from '../../lib/cms';
 
 interface ServiceItem {
   id: string;
@@ -19,6 +20,7 @@ export const AdminServices: React.FC = () => {
   const { showToast } = useToast();
 
   const [services, setServices] = useState<ServiceItem[]>([...ServicesData.servicesList]);
+  const [cmsReady, setCmsReady] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modal State
@@ -42,6 +44,21 @@ export const AdminServices: React.FC = () => {
 
   // Delete State
   const [deleteConfirm, setDeleteConfirm] = useState<ServiceItem | null>(null);
+
+  useEffect(() => {
+    loadCmsSection<{ services: ServiceItem[] }>('services')
+      .then((saved) => { if (saved?.services) setServices(saved.services); })
+      .catch(() => showToast('Saved services could not be loaded.', 'error'))
+      .finally(() => setCmsReady(true));
+  }, [showToast]);
+
+  useEffect(() => {
+    if (!cmsReady) return;
+    const timer = window.setTimeout(() => {
+      saveCmsSection('services', { services }).catch((error) => showToast(error.message, 'error'));
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [services, cmsReady, showToast]);
 
   // Filtered Services
   const filteredServices = services.filter(s =>
@@ -535,6 +552,10 @@ export const AdminServices: React.FC = () => {
         isOpen={isImagePickerOpen}
         onClose={() => setIsImagePickerOpen(false)}
         onSelectImage={(newSrc) => setFormData(prev => ({ ...prev, image: newSrc }))}
+        onUploadFile={async (file) => {
+          const image = await uploadCmsImage(file, 'service');
+          setFormData(prev => ({ ...prev, image }));
+        }}
         currentImage={formData.image}
       />
 

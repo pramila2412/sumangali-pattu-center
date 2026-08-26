@@ -18,14 +18,18 @@ import AdminServices from './pages/Admin/AdminServices';
 import AdminGallery from './pages/Admin/AdminGallery';
 import AdminContactSettings from './pages/Admin/AdminContactSettings';
 import { ToastProvider } from './components/Toast/ToastProvider';
+import { useCmsBootstrap } from './components/CmsBootstrap';
 
 function AppContent() {
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith('/admin');
+  const cmsLoaded = useCmsBootstrap();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  if (!cmsLoaded && !isAdminRoute) return <main className="min-h-screen bg-[#F7F5F0]" />;
 
   return (
     <>

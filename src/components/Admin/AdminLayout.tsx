@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import Logo from '../../assets/logo/logo.png';
 import { useToast } from '../Toast/ToastProvider';
+import { clearAuthTokens } from '../../lib/cms';
 
 interface AdminLayoutProps {
   children?: React.ReactNode;
@@ -48,6 +49,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleLogout = () => {
+    clearAuthTokens();
     showToast('You have been logged out successfully.', 'info');
     navigate('/admin/login');
   };
@@ -217,7 +219,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             {!isSidebarCollapsed && (
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-white truncate">Administrator</p>
-                <p className="text-[11px] text-white/50 truncate">admin@sumangali.com</p>
+                <p className="text-[11px] text-white/50 truncate">Sumangalipattucenter@gmail.com</p>
               </div>
             )}
             {!isSidebarCollapsed && (

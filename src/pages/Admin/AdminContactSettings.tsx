@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GlobalData } from '../../data/GlobalData';
 import { ContactData } from '../../data/ContactData';
+import { loadCmsSection, saveCmsSection } from '../../lib/cms';
 import { useToast } from '../../components/Toast/ToastProvider';
+import ImagePickerModal from '../../components/Admin/ImagePickerModal';
+import { uploadCmsImage } from '../../lib/cms';
 
 interface ContactFieldItem {
   id: string;
@@ -57,6 +60,8 @@ export const AdminContactSettings: React.FC = () => {
   const [contactIntroTitle, setContactIntroTitle] = useState(ContactData.sectionInfo.title);
   const [contactIntroDesc, setContactIntroDesc] = useState(ContactData.sectionInfo.description);
   const [formSuccessMsg, setFormSuccessMsg] = useState(ContactData.form.successMessage);
+  const [logo, setLogo] = useState(GlobalData.logo.startsWith('/uploads/') ? GlobalData.logo : '');
+  const [isLogoPickerOpen, setIsLogoPickerOpen] = useState(false);
 
   // Modal States
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
@@ -79,6 +84,30 @@ export const AdminContactSettings: React.FC = () => {
 
   // Active Tab in Common Settings
   const [activeTab, setActiveTab] = useState<'contact' | 'socials' | 'footer' | 'preview'>('contact');
+  const [cmsReady, setCmsReady] = useState(false);
+
+  useEffect(() => {
+    loadCmsSection<{ phones: ContactFieldItem[]; emails: ContactFieldItem[]; address: string; socials: SocialLinkItem[]; footerAbout: string; footerCopyright: string; contactIntroTitle: string; contactIntroDesc: string; formSuccessMsg: string; logo: string }>('contact')
+      .then((saved) => {
+        if (!saved) return;
+        setPhones(saved.phones ?? phones); setEmails(saved.emails ?? emails); setAddress(saved.address ?? address);
+        setSocials(saved.socials ?? socials); setFooterAbout(saved.footerAbout ?? footerAbout); setFooterCopyright(saved.footerCopyright ?? footerCopyright);
+        setContactIntroTitle(saved.contactIntroTitle ?? contactIntroTitle); setContactIntroDesc(saved.contactIntroDesc ?? contactIntroDesc); setFormSuccessMsg(saved.formSuccessMsg ?? formSuccessMsg);
+        setLogo(saved.logo ?? logo);
+      })
+      .catch(() => showToast('Saved contact settings could not be loaded.', 'error'))
+      .finally(() => setCmsReady(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!cmsReady) return;
+    const timer = window.setTimeout(() => {
+      saveCmsSection('contact', { phones, emails, address, socials, footerAbout, footerCopyright, contactIntroTitle, contactIntroDesc, formSuccessMsg, logo })
+        .catch((error) => showToast(error.message, 'error'));
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [phones, emails, address, socials, footerAbout, footerCopyright, contactIntroTitle, contactIntroDesc, formSuccessMsg, logo, cmsReady, showToast]);
 
   // --- Phone Handlers ---
   const handleOpenAddPhone = () => {
@@ -260,6 +289,14 @@ export const AdminContactSettings: React.FC = () => {
           <i className="bx bx-external-link text-base text-[#D9AD5B]"></i>
           <span>Preview Contact Screen</span>
         </a>
+      </div>
+
+      <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-xs flex flex-col sm:flex-row items-center gap-5">
+        <div className="h-20 w-32 rounded-xl border border-stone-200 bg-stone-50 flex items-center justify-center overflow-hidden">
+          {logo ? <img src={logo} alt="Current site logo" className="h-full w-full object-contain" /> : <span className="text-xs text-stone-400">Default logo</span>}
+        </div>
+        <div className="flex-1 text-center sm:text-left"><h3 className="font-bold text-[#1F1215]">Header & Footer Logo</h3><p className="text-xs text-stone-500 mt-1">Use the same brand logo across the public header and footer.</p></div>
+        <button type="button" onClick={() => setIsLogoPickerOpen(true)} className="px-4 py-2.5 rounded-xl bg-[#6A0F1F] hover:bg-[#8C162B] text-white text-xs font-bold"><i className="bx bx-image-add mr-1"></i> Change Logo</button>
       </div>
 
       {/* Tabs Navigation */}
@@ -1010,6 +1047,14 @@ export const AdminContactSettings: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ImagePickerModal
+        isOpen={isLogoPickerOpen}
+        onClose={() => setIsLogoPickerOpen(false)}
+        onSelectImage={setLogo}
+        onUploadFile={async (file) => setLogo(await uploadCmsImage(file, 'logo'))}
+        currentImage={logo}
+      />
 
     </div>
   );

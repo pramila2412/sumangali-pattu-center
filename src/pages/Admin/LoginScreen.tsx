@@ -12,6 +12,7 @@ import LoginBackground from '../../assets/saree/saree8.jpg';
 import BrandLogo from '../../assets/logo/logo.png';
 import { useToast } from "../../components/Toast/ToastProvider";
 import { useNavigate } from "react-router-dom";
+import { AuthTokens, storeAuthTokens } from "../../lib/cms";
 
 type Screen = "login" | "forgot" | "otp" | "reset";
 
@@ -23,7 +24,7 @@ const LOGIN_API_URL =
 type ApiResponse = {
   success: boolean;
   message: string;
-};
+} & Partial<AuthTokens>;
 
 const LoginScreen = () => {
   const { showToast } = useToast();
@@ -99,6 +100,10 @@ const LoginScreen = () => {
     setIsLoading(true);
     try {
       const result = await callApi("login", { email: email.trim(), password });
+      if (!result.access_token || !result.refresh_token || !result.access_expires_in) {
+        throw new Error("The server did not issue a secure sign-in token.");
+      }
+      storeAuthTokens({ access_token: result.access_token, refresh_token: result.refresh_token, access_expires_in: result.access_expires_in });
       showToast(result.message, "success");
       navigate("/admin/dashboard");
     } catch (error) {

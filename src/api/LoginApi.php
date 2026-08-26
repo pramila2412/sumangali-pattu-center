@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /*
  * POST /api/LoginApi.php
- * Actions: login, forgot_password, verify_otp, reset_password, logout
+ * Actions: login, refresh_token, forgot_password, verify_otp, reset_password, logout
  *
  * Required table:
  * CREATE TABLE admin_users (
@@ -20,7 +20,7 @@ header("Content-Type: application/json; charset=utf-8");
 header("X-Content-Type-Options: nosniff");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 
-$allowedOrigins = ["https://sumangalipattucenter.com", "https://www.sumangalipattucenter.com"];
+$allowedOrigins = ["https://sumangalipattucenter.com", "https://www.sumangalipattucenter.com", "http://localhost:5173", "http://127.0.0.1:5173"];
 $origin = $_SERVER["HTTP_ORIGIN"] ?? "";
 if ($origin !== "" && in_array($origin, $allowedOrigins, true)) {
     header("Access-Control-Allow-Origin: " . $origin);
@@ -30,7 +30,7 @@ if ($origin !== "" && in_array($origin, $allowedOrigins, true)) {
 
 if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     header("Access-Control-Allow-Methods: POST, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
     http_response_code(204);
     exit;
 }
@@ -83,7 +83,13 @@ try {
             unset($_SESSION["password_reset"]);
             $_SESSION["admin_id"] = (int) $user["id"];
             $_SESSION["admin_email"] = $user["email"];
-            respond(200, true, "Welcome back.", ["email" => $user["email"]]);
+            respond(200, true, "Welcome back.", array_merge(["email" => $user["email"]], issueTokens($conn, (int) $user["id"])));
+
+        case "refresh_token":
+            $refreshToken = stringValue($data["refresh_token"] ?? "");
+            $userId = validateRefreshToken($conn, $refreshToken);
+            if ($userId === null) respond(401, false, "Your sign-in session has expired. Please sign in again.");
+            respond(200, true, "Session refreshed.", issueTokens($conn, $userId));
 
         case "forgot_password":
             $email = validEmail($data["email"] ?? "");
@@ -159,6 +165,7 @@ try {
             respond(200, true, "Password reset successfully. You can now sign in.");
 
         case "logout":
+            revokeTokens($conn, stringValue($data["access_token"] ?? ""), stringValue($data["refresh_token"] ?? ""));
             $_SESSION = [];
             session_destroy();
             respond(200, true, "You have been signed out.");
@@ -186,6 +193,43 @@ function findAdmin(mysqli $conn, string $email) {
         "email" => $adminEmail,
         "password_hash" => $passwordHash,
     ];
+}
+
+function issueTokens(mysqli $conn, int $userId): array {
+    $accessToken = bin2hex(random_bytes(32));
+    $refreshToken = bin2hex(random_bytes(48));
+    $accessHash = hash("sha256", $accessToken);
+    $refreshHash = hash("sha256", $refreshToken);
+    $accessExpiry = date("Y-m-d H:i:s", time() + 900); // 15 minutes
+    $refreshExpiry = date("Y-m-d H:i:s", time() + 60 * 60 * 24 * 30); // 30 days
+    $conn->query("DELETE FROM admin_auth_tokens WHERE expires_at < NOW() OR revoked_at IS NOT NULL");
+    $statement = $conn->prepare("INSERT INTO admin_auth_tokens (admin_id, token_type, token_hash, expires_at) VALUES (?, 'access', ?, ?), (?, 'refresh', ?, ?)");
+    $statement->bind_param("ississ", $userId, $accessHash, $accessExpiry, $userId, $refreshHash, $refreshExpiry);
+    $statement->execute();
+    return ["access_token" => $accessToken, "refresh_token" => $refreshToken, "access_expires_in" => 900];
+}
+
+function validateRefreshToken(mysqli $conn, string $token): ?int {
+    if ($token === "") return null;
+    $hash = hash("sha256", $token);
+    $statement = $conn->prepare("SELECT admin_id FROM admin_auth_tokens WHERE token_type = 'refresh' AND token_hash = ? AND expires_at > NOW() AND revoked_at IS NULL LIMIT 1");
+    $statement->bind_param("s", $hash);
+    $statement->execute();
+    $statement->bind_result($adminId);
+    if (!$statement->fetch()) return null;
+    $revoke = $conn->prepare("UPDATE admin_auth_tokens SET revoked_at = NOW() WHERE token_hash = ?");
+    $revoke->bind_param("s", $hash);
+    $revoke->execute();
+    return (int) $adminId;
+}
+
+function revokeTokens(mysqli $conn, string $accessToken, string $refreshToken): void {
+    $hashes = array_filter([hash("sha256", $accessToken), hash("sha256", $refreshToken)]);
+    foreach ($hashes as $hash) {
+        $statement = $conn->prepare("UPDATE admin_auth_tokens SET revoked_at = NOW() WHERE token_hash = ?");
+        $statement->bind_param("s", $hash);
+        $statement->execute();
+    }
 }
 
 function sendOtpEmail(string $email, string $otp): bool {
