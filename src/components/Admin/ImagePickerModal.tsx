@@ -41,6 +41,7 @@ interface ImagePickerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectImage: (imageSrc: string) => void;
+  onUploadFile?: (file: File) => Promise<void>;
   currentImage?: string;
 }
 
@@ -50,14 +51,18 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
   isOpen,
   onClose,
   onSelectImage,
+  onUploadFile,
   currentImage
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('stock');
   const [customUrl, setCustomUrl] = useState('');
   const [urlStatus, setUrlStatus] = useState<'idle' | 'loading' | 'valid' | 'error'>('idle');
   const [uploadedPreview, setUploadedPreview] = useState<string | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
   const [uploadedFileSize, setUploadedFileSize] = useState<string>('');
+  const [uploadError, setUploadError] = useState<string>('');
+  const [isSavingUpload, setIsSavingUpload] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<'all' | 'saree' | 'model'>('all');
   const [isDragging, setIsDragging] = useState(false);
@@ -85,6 +90,8 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
       return;
     }
     setUploadedFileName(file.name);
+    setUploadedFile(file);
+    setUploadError('');
     const sizeInKB = (file.size / 1024).toFixed(1);
     setUploadedFileSize(file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` : `${sizeInKB} KB`);
 
@@ -117,10 +124,22 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
     if (file) processFile(file);
   };
 
-  const handleConfirmUpload = () => {
-    if (uploadedPreview) {
-      onSelectImage(uploadedPreview);
-      onClose();
+  const handleConfirmUpload = async () => {
+    if (uploadedPreview && uploadedFile) {
+      setIsSavingUpload(true);
+      setUploadError('');
+      try {
+        if (onUploadFile) {
+          await onUploadFile(uploadedFile);
+        } else {
+          onSelectImage(uploadedPreview);
+        }
+        onClose();
+      } catch (error) {
+        setUploadError(error instanceof Error ? error.message : 'Image could not be uploaded. Please try again.');
+      } finally {
+        setIsSavingUpload(false);
+      }
     }
   };
 
@@ -440,6 +459,7 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
                     <p className="text-[11px] text-emerald-700 font-medium mt-1">
                       Ready to apply to your banner or catalog
                     </p>
+                    {uploadError && <p className="text-[11px] text-red-600 font-semibold mt-1">{uploadError}</p>}
                   </div>
 
                   <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -447,6 +467,7 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
                       type="button"
                       onClick={() => {
                         setUploadedPreview(null);
+                        setUploadedFile(null);
                         setUploadedFileName('');
                         setUploadedFileSize('');
                       }}
@@ -457,9 +478,10 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
                     <button
                       type="button"
                       onClick={handleConfirmUpload}
+                      disabled={isSavingUpload}
                       className="flex-1 sm:flex-none px-5 py-2 bg-[#6A0F1F] hover:bg-[#8C162B] text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-1.5"
                     >
-                      <i className="bx bx-check text-base"></i> Use This Photo
+                      <i className="bx bx-check text-base"></i> {isSavingUpload ? 'Uploading...' : 'Use This Photo'}
                     </button>
                   </div>
                 </div>

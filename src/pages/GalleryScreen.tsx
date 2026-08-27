@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { GalleryData } from '../data/GalleryData';
+import { GlobalData } from '../data/GlobalData';
 import BlurText from '../components/ReactBits/BlurText';
 import FadeContent from '../components/ReactBits/FadeContent';
 import bannerVid from '../assets/videos/vid1.mp4';
+
+const whatsappLink = (collectionTitle: string, action: 'buy' | 'sell') => {
+  const phone = GlobalData.contactInfo.phone.replace(/\D/g, '').replace(/^91/, '');
+  const message = action === 'buy'
+    ? `வணக்கம், ${collectionTitle} collection-ல் உள்ள saree வாங்க விரும்புகிறேன். விலை மற்றும் விவரங்களை அனுப்புங்கள்.`
+    : `வணக்கம், என்னிடம் ${collectionTitle} வகை saree உள்ளது. விற்க விரும்புகிறேன். மதிப்பீட்டு விவரங்களை அனுப்புங்கள்.`;
+  return `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`;
+};
 
 const GalleryScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<typeof GalleryData.categories[0] | null>(null);
@@ -132,6 +141,14 @@ const GalleryScreen = () => {
                         {category.description}
                       </p>
                     </div>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-4" onClick={(event) => event.stopPropagation()}>
+                    <a href={whatsappLink(category.title, 'buy')} target="_blank" rel="noopener noreferrer" className="flex-1 rounded-lg bg-[var(--secondary)] px-3 py-2 text-center text-xs font-bold text-[var(--primary)] transition-transform hover:scale-[1.02]">
+                      <i className="bx bx-cart mr-1"></i> Buy
+                    </a>
+                    <a href={whatsappLink(category.title, 'sell')} target="_blank" rel="noopener noreferrer" className="flex-1 rounded-lg bg-[#25D366] px-3 py-2 text-center text-xs font-bold text-white transition-transform hover:scale-[1.02]">
+                      <i className="bx bxl-whatsapp mr-1"></i> Sell
+                    </a>
                   </div>
                 </div>
               </FadeContent>

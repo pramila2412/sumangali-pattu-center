@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GalleryData } from '../../data/GalleryData';
 import ImagePickerModal from '../../components/Admin/ImagePickerModal';
 import { useToast } from '../../components/Toast/ToastProvider';
+import { loadCmsSection, saveCmsSection, uploadCmsImage } from '../../lib/cms';
 
 interface GalleryCategory {
   id: string;
@@ -15,6 +16,7 @@ export const AdminGallery: React.FC = () => {
   const { showToast } = useToast();
 
   const [categories, setCategories] = useState<GalleryCategory[]>([...GalleryData.categories]);
+  const [cmsReady, setCmsReady] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<GalleryCategory | null>(null);
 
   // Collection Modal States
@@ -41,6 +43,21 @@ export const AdminGallery: React.FC = () => {
 
   // Lightbox preview inside admin
   const [previewPhoto, setPreviewPhoto] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadCmsSection<{ categories: GalleryCategory[] }>('gallery')
+      .then((saved) => { if (saved?.categories) setCategories(saved.categories); })
+      .catch(() => showToast('Saved gallery could not be loaded.', 'error'))
+      .finally(() => setCmsReady(true));
+  }, [showToast]);
+
+  useEffect(() => {
+    if (!cmsReady) return;
+    const timer = window.setTimeout(() => {
+      saveCmsSection('gallery', { categories }).catch((error) => showToast(error.message, 'error'));
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [categories, cmsReady, showToast]);
 
   const slugify = (text: string) => {
     return text
@@ -586,6 +603,14 @@ export const AdminGallery: React.FC = () => {
             setCollectionForm(prev => ({ ...prev, coverImage: newSrc }));
           } else {
             handleAddPhotoToActiveCollection(newSrc);
+          }
+        }}
+        onUploadFile={async (file) => {
+          const image = await uploadCmsImage(file, 'gallery');
+          if (imagePickerTarget === 'collectionCover') {
+            setCollectionForm(prev => ({ ...prev, coverImage: image }));
+          } else {
+            handleAddPhotoToActiveCollection(image);
           }
         }}
         currentImage={imagePickerTarget === 'collectionCover' ? collectionForm.coverImage : undefined}

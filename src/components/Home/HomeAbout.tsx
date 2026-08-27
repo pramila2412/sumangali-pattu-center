@@ -32,7 +32,11 @@ const HomeAbout = () => {
               {HomeAboutData.features.map((feature, idx) => (
                 <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border border-[var(--border)] hover:shadow-md transition-shadow">
                   <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[var(--background-gold)] text-[var(--secondary)] mb-4 text-2xl">
-                    <i className={`bx ${feature.icon === 'flaticon-practice' ? 'bx-check-shield' : 'bx-time-five'}`}></i>
+                    <i className={`bx ${
+                      feature.icon === 'flaticon-practice' ? 'bx-check-shield' :
+                      feature.icon === 'flaticon-help' ? 'bx-time-five' :
+                      feature.icon.startsWith('bx') ? feature.icon : `bx-${feature.icon}`
+                    }`}></i>
                   </div>
                   <h3 className="text-xl font-bold text-[var(--heading)] mb-2">{feature.title}</h3>
                   <p className="text-[var(--paragraph)] text-sm">{feature.description}</p>

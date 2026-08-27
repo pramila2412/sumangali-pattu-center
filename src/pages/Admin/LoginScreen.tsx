@@ -12,10 +12,19 @@ import LoginBackground from '../../assets/saree/saree8.jpg';
 import BrandLogo from '../../assets/logo/logo.png';
 import { useToast } from "../../components/Toast/ToastProvider";
 import { useNavigate } from "react-router-dom";
+import { AuthTokens, storeAuthTokens } from "../../lib/cms";
 
 type Screen = "login" | "forgot" | "otp" | "reset";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const LOGIN_API_URL =
+  import.meta.env.VITE_LOGIN_API_URL ||
+  "https://sumangalipattucenter.com/api/LoginApi.php";
+
+type ApiResponse = {
+  success: boolean;
+  message: string;
+} & Partial<AuthTokens>;
 
 const LoginScreen = () => {
   const { showToast } = useToast();
@@ -29,6 +38,7 @@ const LoginScreen = () => {
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const otpInputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   useEffect(() => {
@@ -42,20 +52,42 @@ const LoginScreen = () => {
 
   const validEmail = () => emailPattern.test(email.trim());
 
-  const sendOtp = () => {
+  const callApi = async (action: string, payload: Record<string, string> = {}) => {
+    const response = await fetch(LOGIN_API_URL, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, ...payload }),
+    });
+    const result = (await response.json().catch(() => null)) as ApiResponse | null;
+    if (!response.ok || !result?.success) {
+      throw new Error(result?.message || "Unable to contact the server. Please try again.");
+    }
+    return result;
+  };
+
+  const sendOtp = async () => {
     if (!validEmail()) {
       showToast("Enter a valid admin email address.", "error");
       return;
     }
-    setOtpSent(true);
-    setSecondsLeft(120);
-    setOtp(Array(6).fill(""));
-    setScreen("otp");
-    window.setTimeout(() => otpInputRefs.current[0]?.focus(), 0);
-    showToast("A one-time password has been sent to your email.", "info");
+    setIsLoading(true);
+    try {
+      const result = await callApi("forgot_password", { email: email.trim() });
+      setOtpSent(true);
+      setSecondsLeft(120);
+      setOtp(Array(6).fill(""));
+      setScreen("otp");
+      window.setTimeout(() => otpInputRefs.current[0]?.focus(), 0);
+      showToast(result.message, "info");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Unable to send the OTP.", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const submitLogin = (event: FormEvent<HTMLFormElement>) => {
+  const submitLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validEmail()) {
       showToast("Enter a valid admin email address.", "error");
@@ -65,11 +97,23 @@ const LoginScreen = () => {
       showToast("Password must be at least 8 characters.", "error");
       return;
     }
-    showToast("Welcome back. Opening your dashboard.", "success");
-    navigate("/admin/dashboard");
+    setIsLoading(true);
+    try {
+      const result = await callApi("login", { email: email.trim(), password });
+      if (!result.access_token || !result.refresh_token || !result.access_expires_in) {
+        throw new Error("The server did not issue a secure sign-in token.");
+      }
+      storeAuthTokens({ access_token: result.access_token, refresh_token: result.refresh_token, access_expires_in: result.access_expires_in });
+      showToast(result.message, "success");
+      navigate("/admin/dashboard");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Unable to sign in.", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const verifyOtp = (event: FormEvent<HTMLFormElement>) => {
+  const verifyOtp = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!otpSent) {
       showToast("Request an OTP before continuing.", "error");
@@ -79,11 +123,19 @@ const LoginScreen = () => {
       showToast("Enter all six OTP digits to continue.", "error");
       return;
     }
-    setScreen("reset");
-    showToast("OTP verified. Create your new password.", "success");
+    setIsLoading(true);
+    try {
+      const result = await callApi("verify_otp", { email: email.trim(), otp: otp.join("") });
+      setScreen("reset");
+      showToast(result.message, "success");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Unable to verify the OTP.", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const resetPassword = (event: FormEvent<HTMLFormElement>) => {
+  const resetPassword = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (password.length < 8) {
       showToast("New password must be at least 8 characters.", "error");
@@ -93,12 +145,20 @@ const LoginScreen = () => {
       showToast("New password and confirmation do not match.", "error");
       return;
     }
-    setPassword("");
-    setConfirmPassword("");
-    setOtp(Array(6).fill(""));
-    setOtpSent(false);
-    setScreen("login");
-    showToast("Password reset successfully. You can now sign in.", "success");
+    setIsLoading(true);
+    try {
+      const result = await callApi("reset_password", { password });
+      setPassword("");
+      setConfirmPassword("");
+      setOtp(Array(6).fill(""));
+      setOtpSent(false);
+      setScreen("login");
+      showToast(result.message, "success");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Unable to reset the password.", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const returnToLogin = () => {
@@ -204,6 +264,7 @@ const LoginScreen = () => {
         setConfirmPassword={setConfirmPassword}
         otp={otp}
         secondsLeft={secondsLeft}
+        isLoading={isLoading}
         showPassword={showPassword}
         setShowPassword={setShowPassword}
         showConfirmPassword={showConfirmPassword}

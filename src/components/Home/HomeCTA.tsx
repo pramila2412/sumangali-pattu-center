@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { HomeCTAData } from '../../data/HomeData';
 import ctaImg from '../../assets/saree/saree5.jpg';
 
 const HomeCTA = () => {
@@ -16,18 +17,21 @@ const HomeCTA = () => {
         <div className="bg-[var(--primary)] rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center">
           <div className="lg:w-7/12 p-10 lg:p-16 space-y-6">
             <span className="text-[var(--secondary)] font-bold uppercase tracking-wider text-sm">
-              We Help You Sell Your Old Silk Sarees
+              {HomeCTAData.badge}
             </span>
             <h2 className="text-3xl lg:text-5xl font-extrabold text-white leading-tight">
-              Sell Your Sarees Hassle-Free with the Best Market Value
+              {HomeCTAData.title}
             </h2>
             <p className="text-white/80 text-lg max-w-xl">
-              Get Instant Cash for Your Old Kanchipuram, Banarasi & Mysore Sarees! Reach out to our experts for a quick and free evaluation.
+              {HomeCTAData.description}
             </p>
-            <div className="pt-4">
-              <Link to="/contact" className="inline-block bg-[var(--gold-button)] hover:bg-[var(--gold-button-hover)] text-[var(--gold-button-text)] font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
-                Contact Us Now <i className="bx bx-chevron-right ml-1"></i>
+            <div className="pt-4 flex flex-wrap gap-4 items-center">
+              <Link to={HomeCTAData.primaryBtnLink || '/contact'} className="inline-flex items-center bg-[var(--gold-button)] hover:bg-[var(--gold-button-hover)] text-[var(--gold-button-text)] font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+                {HomeCTAData.primaryBtnText} <i className="bx bx-chevron-right ml-1 text-xl"></i>
               </Link>
+              <a href={`tel:${HomeCTAData.phone}`} className="inline-flex items-center bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-8 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20">
+                <i className="bx bx-phone-call mr-2 text-xl text-[var(--secondary)]"></i> Call: {HomeCTAData.phone}
+              </a>
             </div>
           </div>
           

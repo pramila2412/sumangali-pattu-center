@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GlobalData } from '../../data/GlobalData';
 import { ContactData } from '../../data/ContactData';
+import { loadCmsSection, saveCmsSection } from '../../lib/cms';
 import { useToast } from '../../components/Toast/ToastProvider';
+import ImagePickerModal from '../../components/Admin/ImagePickerModal';
+import { uploadCmsImage } from '../../lib/cms';
 
 interface ContactFieldItem {
   id: string;
@@ -18,6 +21,7 @@ interface SocialLinkItem {
 }
 
 const availableSocialPlatforms = [
+  { platform: 'Google Review', key: 'google-review', icon: 'bxl-google' },
   { platform: 'Facebook', key: 'facebook', icon: 'bxl-facebook' },
   { platform: 'Instagram', key: 'instagram', icon: 'bxl-instagram' },
   { platform: 'WhatsApp', key: 'whatsapp', icon: 'bxl-whatsapp' },
@@ -26,6 +30,17 @@ const availableSocialPlatforms = [
   { platform: 'Twitter / X', key: 'twitter', icon: 'bxl-twitter' },
   { platform: 'Pinterest', key: 'pinterest', icon: 'bxl-pinterest' },
 ];
+
+const googleReviewLink: SocialLinkItem = {
+  id: 'google-review',
+  platform: 'Google Review',
+  url: 'https://www.google.com/maps/search/?api=1&query=Sumangali%20Pattu%20Center%20Nanganallur',
+  icon: 'bxl-google',
+};
+
+const withRequiredGoogleReview = (items: SocialLinkItem[]) => (
+  items.some((item) => item.platform === 'Google Review') ? items : [...items, googleReviewLink]
+);
 
 export const AdminContactSettings: React.FC = () => {
   const { showToast } = useToast();
@@ -49,6 +64,7 @@ export const AdminContactSettings: React.FC = () => {
   const [socials, setSocials] = useState<SocialLinkItem[]>([
     { id: 's1', platform: 'Facebook', url: GlobalData.socialLinks.facebook, icon: 'bxl-facebook' },
     { id: 's2', platform: 'Instagram', url: GlobalData.socialLinks.instagram, icon: 'bxl-instagram' },
+    googleReviewLink,
   ]);
 
   // 5. Footer & Contact Screen Content State
@@ -57,6 +73,8 @@ export const AdminContactSettings: React.FC = () => {
   const [contactIntroTitle, setContactIntroTitle] = useState(ContactData.sectionInfo.title);
   const [contactIntroDesc, setContactIntroDesc] = useState(ContactData.sectionInfo.description);
   const [formSuccessMsg, setFormSuccessMsg] = useState(ContactData.form.successMessage);
+  const [logo, setLogo] = useState(GlobalData.logo.startsWith('/uploads/') ? GlobalData.logo : '');
+  const [isLogoPickerOpen, setIsLogoPickerOpen] = useState(false);
 
   // Modal States
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
@@ -79,6 +97,30 @@ export const AdminContactSettings: React.FC = () => {
 
   // Active Tab in Common Settings
   const [activeTab, setActiveTab] = useState<'contact' | 'socials' | 'footer' | 'preview'>('contact');
+  const [cmsReady, setCmsReady] = useState(false);
+
+  useEffect(() => {
+    loadCmsSection<{ phones: ContactFieldItem[]; emails: ContactFieldItem[]; address: string; socials: SocialLinkItem[]; footerAbout: string; footerCopyright: string; contactIntroTitle: string; contactIntroDesc: string; formSuccessMsg: string; logo: string }>('contact')
+      .then((saved) => {
+        if (!saved) return;
+        setPhones(saved.phones ?? phones); setEmails(saved.emails ?? emails); setAddress(saved.address ?? address);
+        setSocials(withRequiredGoogleReview(saved.socials ?? socials)); setFooterAbout(saved.footerAbout ?? footerAbout); setFooterCopyright(saved.footerCopyright ?? footerCopyright);
+        setContactIntroTitle(saved.contactIntroTitle ?? contactIntroTitle); setContactIntroDesc(saved.contactIntroDesc ?? contactIntroDesc); setFormSuccessMsg(saved.formSuccessMsg ?? formSuccessMsg);
+        setLogo(saved.logo ?? logo);
+      })
+      .catch(() => showToast('Saved contact settings could not be loaded.', 'error'))
+      .finally(() => setCmsReady(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!cmsReady) return;
+    const timer = window.setTimeout(() => {
+      saveCmsSection('contact', { phones, emails, address, socials, footerAbout, footerCopyright, contactIntroTitle, contactIntroDesc, formSuccessMsg, logo })
+        .catch((error) => showToast(error.message, 'error'));
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [phones, emails, address, socials, footerAbout, footerCopyright, contactIntroTitle, contactIntroDesc, formSuccessMsg, logo, cmsReady, showToast]);
 
   // --- Phone Handlers ---
   const handleOpenAddPhone = () => {
@@ -196,13 +238,14 @@ export const AdminContactSettings: React.FC = () => {
       return;
     }
 
-    const matched = availableSocialPlatforms.find(p => p.platform === socialForm.platform) || availableSocialPlatforms[0];
+    const platform = editingSocial?.platform === 'Google Review' ? 'Google Review' : socialForm.platform;
+    const matched = availableSocialPlatforms.find(p => p.platform === platform) || availableSocialPlatforms[0];
 
     if (editingSocial) {
       setSocials(prev =>
         prev.map(s =>
           s.id === editingSocial.id
-            ? { ...s, platform: socialForm.platform, url: socialForm.url.trim(), icon: matched.icon }
+            ? { ...s, platform, url: socialForm.url.trim(), icon: matched.icon }
             : s
         )
       );
@@ -210,7 +253,7 @@ export const AdminContactSettings: React.FC = () => {
     } else {
       const newSocial: SocialLinkItem = {
         id: `s-${Date.now()}`,
-        platform: socialForm.platform,
+        platform,
         url: socialForm.url.trim(),
         icon: matched.icon
       };
@@ -221,6 +264,10 @@ export const AdminContactSettings: React.FC = () => {
   };
 
   const handleDeleteSocial = (id: string) => {
+    if (socials.find((social) => social.id === id)?.platform === 'Google Review') {
+      showToast('Google Review is required and cannot be removed. You can edit its URL.', 'error');
+      return;
+    }
     setSocials(prev => prev.filter(s => s.id !== id));
     setDeleteConfirm(null);
     showToast('Social media link removed.', 'info');
@@ -260,6 +307,14 @@ export const AdminContactSettings: React.FC = () => {
           <i className="bx bx-external-link text-base text-[#D9AD5B]"></i>
           <span>Preview Contact Screen</span>
         </a>
+      </div>
+
+      <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-xs flex flex-col sm:flex-row items-center gap-5">
+        <div className="h-20 w-32 rounded-xl border border-stone-200 bg-stone-50 flex items-center justify-center overflow-hidden">
+          {logo ? <img src={logo} alt="Current site logo" className="h-full w-full object-contain" /> : <span className="text-xs text-stone-400">Default logo</span>}
+        </div>
+        <div className="flex-1 text-center sm:text-left"><h3 className="font-bold text-[#1F1215]">Header & Footer Logo</h3><p className="text-xs text-stone-500 mt-1">Use the same brand logo across the public header and footer.</p></div>
+        <button type="button" onClick={() => setIsLogoPickerOpen(true)} className="px-4 py-2.5 rounded-xl bg-[#6A0F1F] hover:bg-[#8C162B] text-white text-xs font-bold"><i className="bx bx-image-add mr-1"></i> Change Logo</button>
       </div>
 
       {/* Tabs Navigation */}
@@ -507,7 +562,7 @@ export const AdminContactSettings: React.FC = () => {
                   Social Media Channels ({socials.length})
                 </h3>
                 <p className="text-xs text-stone-500">
-                  Manage Facebook, Instagram, WhatsApp & YouTube profile URLs
+                  Add only the channels you want to show as floating icons. Google Review is always shown.
                 </p>
               </div>
             </div>
@@ -556,14 +611,16 @@ export const AdminContactSettings: React.FC = () => {
                   >
                     <i className="bx bx-edit"></i>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeleteConfirm({ type: 'social', id: social.id, label: social.platform })}
-                    className="w-8 h-8 rounded-lg bg-white hover:bg-red-100 text-red-600 flex items-center justify-center text-sm shadow-xs transition-colors"
-                    title="Delete"
-                  >
-                    <i className="bx bx-trash"></i>
-                  </button>
+                  {social.platform !== 'Google Review' && (
+                    <button
+                      type="button"
+                      onClick={() => setDeleteConfirm({ type: 'social', id: social.id, label: social.platform })}
+                      className="w-8 h-8 rounded-lg bg-white hover:bg-red-100 text-red-600 flex items-center justify-center text-sm shadow-xs transition-colors"
+                      title="Delete"
+                    >
+                      <i className="bx bx-trash"></i>
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -923,7 +980,8 @@ export const AdminContactSettings: React.FC = () => {
                 <select
                   value={socialForm.platform}
                   onChange={(e) => setSocialForm({ ...socialForm, platform: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6A0F1F]"
+                  disabled={editingSocial?.platform === 'Google Review'}
+                  className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6A0F1F] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {availableSocialPlatforms.map((p) => (
                     <option key={p.key} value={p.platform}>
@@ -1010,6 +1068,14 @@ export const AdminContactSettings: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ImagePickerModal
+        isOpen={isLogoPickerOpen}
+        onClose={() => setIsLogoPickerOpen(false)}
+        onSelectImage={setLogo}
+        onUploadFile={async (file) => setLogo(await uploadCmsImage(file, 'logo'))}
+        currentImage={logo}
+      />
 
     </div>
   );

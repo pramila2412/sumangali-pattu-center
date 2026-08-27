@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AboutData } from '../../data/AboutData';
 import { useToast } from '../../components/Toast/ToastProvider';
+import { loadCmsSection, saveCmsSection } from '../../lib/cms';
 
 interface Counter {
   id: number;
@@ -62,6 +63,32 @@ export const AdminAbout: React.FC = () => {
 
   // Active FAQ preview
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [cmsReady, setCmsReady] = useState(false);
+
+  useEffect(() => {
+    loadCmsSection<{ marquee: string; statsHeader: typeof statsHeader; counters: Counter[]; faqHeader: typeof faqHeader; faqs: FaqItem[] }>('about')
+      .then((saved) => {
+        if (!saved) return;
+        setMarquee(saved.marquee ?? marquee);
+        setStatsHeader(saved.statsHeader ?? statsHeader);
+        setCounters(saved.counters ?? counters);
+        setFaqHeader(saved.faqHeader ?? faqHeader);
+        setFaqs(saved.faqs ?? faqs);
+      })
+      .catch(() => showToast('Saved About content could not be loaded.', 'error'))
+      .finally(() => setCmsReady(true));
+    // Defaults are intentionally used only if no saved CMS record exists.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!cmsReady) return;
+    const timer = window.setTimeout(() => {
+      saveCmsSection('about', { marquee, statsHeader, counters, faqHeader, faqs })
+        .catch((error) => showToast(error.message, 'error'));
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [marquee, statsHeader, counters, faqHeader, faqs, cmsReady, showToast]);
 
   // Handle Save Header & Marquee
   const handleSaveGeneral = (e: React.FormEvent) => {

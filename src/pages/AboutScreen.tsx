@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AboutData } from '../data/AboutData';
+import { GlobalData } from '../data/GlobalData';
 import HomeAbout from '../components/Home/HomeAbout';
 import HomeServices from '../components/Home/HomeServices';
 import HomeProcess from '../components/Home/HomeProcess';
@@ -59,7 +60,7 @@ const AboutScreen = () => {
       <div className="bg-[var(--primary)] text-white py-4 border-y-4 border-[var(--secondary)] font-bold text-lg md:text-xl overflow-hidden whitespace-nowrap">
         <marquee behavior="scroll" direction="left" scrollamount="8">
           <strong className="text-[var(--secondary)] mr-2">Address:</strong>  
-          No.13 4th Main Road Nanganallur Chennai-6000061 
+          {GlobalData.contactInfo.address}
         </marquee>
       </div>
 
@@ -125,8 +126,12 @@ const AboutScreen = () => {
                     className="w-full text-left px-6 py-5 font-bold text-[var(--heading)] flex justify-between items-center hover:bg-[var(--background-gold)] transition-colors focus:outline-none"
                     onClick={() => toggleFaq(idx)}
                   >
-                    {faq.question}
-                    <i className={`bx ${openFaq === idx ? 'bx-minus' : 'bx-plus'} text-2xl text-[var(--primary)]`}></i>
+                    <span>{faq.question}</span>
+                    <span className={`ml-4 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--background-gold)] text-[var(--primary)] transition-transform duration-300 ${openFaq === idx ? 'rotate-180' : ''}`} aria-hidden="true">
+                      <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </span>
                   </button>
                   <div 
                     className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${openFaq === idx ? 'max-h-96 py-5 border-t border-[var(--border)]' : 'max-h-0'}`}
@@ -147,8 +152,12 @@ const AboutScreen = () => {
                       className="w-full text-left px-6 py-5 font-bold text-[var(--heading)] flex justify-between items-center hover:bg-[var(--background-gold)] transition-colors focus:outline-none"
                       onClick={() => toggleFaq(globalIdx)}
                     >
-                      {faq.question}
-                      <i className={`bx ${openFaq === globalIdx ? 'bx-minus' : 'bx-plus'} text-2xl text-[var(--primary)]`}></i>
+                      <span>{faq.question}</span>
+                      <span className={`ml-4 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--background-gold)] text-[var(--primary)] transition-transform duration-300 ${openFaq === globalIdx ? 'rotate-180' : ''}`} aria-hidden="true">
+                        <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </span>
                     </button>
                     <div 
                       className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${openFaq === globalIdx ? 'max-h-96 py-5 border-t border-[var(--border)]' : 'max-h-0'}`}

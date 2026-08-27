@@ -8,10 +8,10 @@ export const HomeBannerData = [
     tagline: "Cash For Zari – Trusted by Saree Sellers",
     title: "Sell Old Silk & Pattu\nSarees for Instant Cash",
     description: "At Sumangali Pattu Center, we buy used Kanchipuram, Banarasi, Mysore, and other silk sarees at top prices. Enjoy free doorstep pickup, fair evaluation, and same-day payment.",
-    primaryBtn: "How It Works",
-    primaryLink: "/about",
-    secondaryBtn: "Call Now",
-    secondaryLink: "tel:9944118349",
+    primaryBtn: "Contact Us Now",
+    primaryLink: "/contact",
+    secondaryBtn: "How It Works",
+    secondaryLink: "/about",
     image: Banner1
   },
   {
@@ -19,8 +19,8 @@ export const HomeBannerData = [
     tagline: "Quick Pickup & Instant Cash",
     title: "Sell Old Silk Sarees in\nMinutes – No Hassle,\nNo Delay",
     description: "Got unused or old silk sarees? At Sumangali Pattu Center, we ensure fast doorstep pickup and on-the-spot cash payment. We buy Kanchipuram, Banarasi, and other silk sarees.",
-    primaryBtn: "How It Works",
-    primaryLink: "/about",
+    primaryBtn: "Get Instant Quote",
+    primaryLink: "/contact",
     secondaryBtn: "Call Now",
     secondaryLink: "tel:9944118349",
     image: Banner2
@@ -30,10 +30,10 @@ export const HomeBannerData = [
     tagline: "Upgrade Your Wardrobe",
     title: "Exchange Old Silk\nSarees for Best Value",
     description: "Want to replace your old silk sarees? Sumangali Pattu Center offers easy exchange options for your Kanchipuram, Banarasi, or Mysore sarees. Transparent deals with trusted professionals.",
-    primaryBtn: "Explore Options",
-    primaryLink: "/services",
-    secondaryBtn: "Call Now",
-    secondaryLink: "tel:9944118349",
+    primaryBtn: "Contact Us",
+    primaryLink: "/contact",
+    secondaryBtn: "Our Services",
+    secondaryLink: "/services",
     image: Banner3
   }
 ];
@@ -126,3 +126,13 @@ export const HomeProcessData = {
     }
   ]
 };
+
+export const HomeCTAData = {
+  badge: "We Help You Sell Your Old Silk Sarees",
+  title: "Sell Your Sarees Hassle-Free with the Best Market Value",
+  description: "Get Instant Cash for Your Old Kanchipuram, Banarasi & Mysore Sarees! Reach out to our experts for a quick and free evaluation.",
+  primaryBtnText: "Contact Us Now",
+  primaryBtnLink: "/contact",
+  phone: "9944118349"
+};
+

@@ -1,10 +1,19 @@
 import React, { useEffect } from 'react';
 import { Link, Routes, Route, useParams } from 'react-router-dom';
 import { ServicesData } from '../data/ServicesData';
+import { GlobalData } from '../data/GlobalData';
 import HomeServices from '../components/Home/HomeServices';
 import BlurText from '../components/ReactBits/BlurText';
 import FadeContent from '../components/ReactBits/FadeContent';
 import bannerVid from '../assets/videos/vid4.mp4';
+
+const whatsappLink = (serviceTitle: string, action: 'buy' | 'sell') => {
+  const phone = GlobalData.contactInfo.phone.replace(/\D/g, '').replace(/^91/, '');
+  const message = action === 'buy'
+    ? `வணக்கம், நான் ${serviceTitle} வாங்க விரும்புகிறேன். விலை மற்றும் விவரங்களை அனுப்புங்கள்.`
+    : `வணக்கம், என்னிடம் ${serviceTitle} உள்ளது. விற்க விரும்புகிறேன். மதிப்பீடு மற்றும் pickup விவரங்களை அனுப்புங்கள்.`;
+  return `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`;
+};
 
 // Inner Banner Component
 const ServicesBanner = ({ title, breadcrumb }: { title: string, breadcrumb: string }) => (
@@ -86,6 +95,15 @@ const ServiceDetail = () => {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href={whatsappLink(service.title, 'buy')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 font-bold text-[var(--primary)] transition-transform hover:scale-105">
+                  <i className="bx bx-cart text-xl"></i> Buy via WhatsApp
+                </a>
+                <a href={whatsappLink(service.title, 'sell')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 font-bold text-white transition-transform hover:scale-105">
+                  <i className="bx bxl-whatsapp text-xl"></i> Sell via WhatsApp
+                </a>
+              </div>
             </div>
             
             <div className="lg:w-1/2 w-full">
@@ -137,12 +155,11 @@ const ServicesIndex = () => {
                   </div>
                   <div className="p-8 flex-grow flex flex-col">
                     <p className="text-[var(--paragraph)] mb-6 flex-grow">{service.description1.substring(0, 150)}...</p>
-                    <Link 
-                      to={`/services/${service.id}`} 
-                      className="inline-flex items-center text-[var(--primary)] font-bold hover:text-[var(--secondary)] transition-colors"
-                    >
-                      Read More <i className="bx bx-right-arrow-alt ml-2 text-xl"></i>
-                    </Link>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Link to={`/services/${service.id}`} className="inline-flex items-center text-[var(--primary)] font-bold hover:text-[var(--secondary)] transition-colors">Read More <i className="bx bx-right-arrow-alt ml-2 text-xl"></i></Link>
+                      <a href={whatsappLink(service.title, 'buy')} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-[var(--primary)] hover:text-[var(--secondary)]">Buy</a>
+                      <a href={whatsappLink(service.title, 'sell')} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-[#128C3E] hover:underline">Sell</a>
+                    </div>
                   </div>
                 </div>
               </FadeContent>

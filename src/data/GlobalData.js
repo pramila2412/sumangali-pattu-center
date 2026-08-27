@@ -4,11 +4,18 @@ export const GlobalData = {
   contactInfo: {
     phone: "9944118349",
     email: "Sumangalipattucenter@gmail.com",
+    phones: [{ id: "p1", label: "Primary Contact & WhatsApp", value: "9944118349", isPrimary: true }],
+    emails: [{ id: "e1", label: "Primary Inquiry Email", value: "Sumangalipattucenter@gmail.com", isPrimary: true }],
     address: "No.13 4th Main Road Nanganallur Chennai-6000061 "
   },
   socialLinks: {
     facebook: "https://www.facebook.com/",
     instagram: "https://www.instagram.com/",
+    channels: [
+      { id: "s1", platform: "Facebook", url: "https://www.facebook.com/", icon: "bxl-facebook" },
+      { id: "s2", platform: "Instagram", url: "https://www.instagram.com/", icon: "bxl-instagram" },
+      { id: "google-review", platform: "Google Review", url: "https://www.google.com/maps/search/?api=1&query=Sumangali%20Pattu%20Center%20Nanganallur", icon: "bxl-google" }
+    ],
   },
   navLinks: [
     { name: "Home", path: "/" },

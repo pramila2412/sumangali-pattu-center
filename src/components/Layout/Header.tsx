@@ -6,24 +6,34 @@ import Logo from '../../assets/logo/logo.png';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const phones = GlobalData.contactInfo.phones || [{ id: 'primary-phone', value: GlobalData.contactInfo.phone }];
+  const emails = GlobalData.contactInfo.emails || [{ id: 'primary-email', value: GlobalData.contactInfo.email }];
+  const socialChannels = GlobalData.socialLinks.channels || [];
+  const brandLogo = GlobalData.logo?.startsWith('/uploads/') ? GlobalData.logo : Logo;
 
   return (
     <>
       {/* Top Header Bar */}
       <div className="bg-[var(--primary)] text-white/90 py-2 hidden md:block border-b border-white/10">
         <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center text-sm">
-          <div className="flex space-x-6">
-            <a href={`tel:${GlobalData.contactInfo.phone}`} className="hover:text-[var(--secondary)] transition-colors flex items-center">
-              <i className="bx bxs-phone-call mr-2"></i> {GlobalData.contactInfo.phone}
-            </a>
-            <a href={`mailto:${GlobalData.contactInfo.email}`} className="hover:text-[var(--secondary)] transition-colors flex items-center">
-              <i className="bx bxs-envelope mr-2"></i> {GlobalData.contactInfo.email}
-            </a>
+          <div className="flex flex-wrap gap-x-6 gap-y-1">
+            {phones.map((phone) => <a key={phone.id} href={`tel:${phone.value}`} className="hover:text-[var(--secondary)] transition-colors flex items-center"><i className="bx bxs-phone-call mr-2"></i>{phone.value}</a>)}
+            {emails.map((email) => <a key={email.id} href={`mailto:${email.value}`} className="hover:text-[var(--secondary)] transition-colors flex items-center"><i className="bx bxs-envelope mr-2"></i>{email.value}</a>)}
           </div>
           <div className="flex space-x-4">
-            <a href={GlobalData.socialLinks.facebook} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-facebook text-lg"></i></a>
-            <a href={GlobalData.socialLinks.instagram} className="hover:text-[var(--secondary)] transition-colors"><i className="bx bxl-instagram text-lg"></i></a>
-          
+            {socialChannels.map((social) => (
+              <a
+                key={social.id}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[var(--secondary)] transition-colors"
+                title={social.platform}
+                aria-label={`Visit us on ${social.platform}`}
+              >
+                <i className={`bx ${social.icon} text-lg`}></i>
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -34,7 +44,7 @@ const Header = () => {
           
           {/* Logo */}
           <Link to="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
-            <img src={Logo} alt="Sumangali Pattu Center Logo" className="h-14 md:h-32 w-auto object-contain" />
+            <img src={brandLogo} alt="Sumangali Pattu Center Logo" className="h-14 md:h-32 w-auto object-contain" />
           </Link>
 
           {/* Desktop Nav */}
@@ -80,9 +90,12 @@ const Header = () => {
 
           {/* Call to action button */}
           <div className="hidden lg:block">
-            <a href={`tel:${GlobalData.contactInfo.phone}`} className="bg-[var(--secondary)] hover:bg-[var(--secondary-dark)] text-[var(--primary)] font-bold py-2.5 px-6 rounded-full transition-colors flex items-center shadow-md">
-              <i className="bx bx-phone-call mr-2 text-xl"></i> Contact Us
-            </a>
+            <Link 
+              to="/contact" 
+              className="bg-[var(--secondary)] hover:bg-[var(--secondary-dark)] text-[var(--primary)] font-bold py-2.5 px-6 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center shadow-md"
+            >
+              <i className="bx bx-envelope mr-2 text-xl"></i> Contact Us
+            </Link>
           </div>
 
           {/* Mobile actions */}
